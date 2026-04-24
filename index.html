@@ -21,17 +21,16 @@ body{font-family:'Aptos','Aptos Display',Calibri,'Segoe UI',Arial,sans-serif;bac
 .hdr-title{font-size:1.6rem;font-weight:300;margin-bottom:.12rem}
 .hdr-title strong{font-weight:700}
 .hdr-sub{font-size:.8rem;opacity:.7}
-.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;flex-shrink:0}
-.hdr-actions{display:flex;gap:.4rem}
+.hdr-actions{display:flex;gap:.4rem;align-items:flex-end}
 .btn-hdr{padding:5px 12px;border:1px solid rgba(255,255,255,.35);border-radius:3px;background:transparent;color:var(--white);font-family:inherit;font-size:11px;cursor:pointer;transition:all .12s;opacity:.85}
 .btn-hdr:hover{opacity:1;background:rgba(255,255,255,.12)}
 .btn-hdr.primary{background:rgba(255,255,255,.18);opacity:1}
 .btn-hdr.primary:hover{background:rgba(255,255,255,.28)}
 
 /* SYNC BAR */
-.sync-bar{display:flex;align-items:center;gap:.85rem;padding:.55rem 2.5rem;border-bottom:1px solid var(--border);font-size:12px;flex-wrap:wrap}
+.sync-bar{display:flex;align-items:center;gap:.85rem;padding:.5rem 2.5rem;border-bottom:1px solid var(--border);font-size:12px;flex-wrap:wrap}
 .sync-bar.hidden{display:none}
-.sync-status{display:flex;align-items:center;gap:5px;font-size:12px}
+.sync-status{display:flex;align-items:center;gap:5px}
 .sync-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 .s-ok .sync-dot{background:var(--ok)}.s-ok{color:var(--ok)}
 .s-loading .sync-dot{background:var(--warn);animation:pulse .8s infinite}.s-loading{color:var(--warn)}
@@ -50,14 +49,16 @@ body{font-family:'Aptos','Aptos Display',Calibri,'Segoe UI',Arial,sans-serif;bac
 .toolbar{background:var(--g5);border-bottom:1px solid var(--border);padding:.75rem 2.5rem;display:flex;gap:.65rem;align-items:center;flex-wrap:wrap}
 .srch-wrap{position:relative;flex:1;min-width:160px;max-width:260px}
 .srch-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--g3);pointer-events:none}
-input[type=text],input[type=url],input[type=password]{font-family:inherit;font-size:13px;background:var(--white);border:1px solid var(--border);border-radius:3px;color:var(--black);outline:none;transition:border-color .15s}
-input:focus{border-color:var(--blue)}
-input::placeholder{color:var(--g4)}
+input[type=text],input[type=url],input[type=password],input[type=number]{font-family:inherit;font-size:13px;background:var(--white);border:1px solid var(--border);border-radius:3px;color:var(--black);outline:none;transition:border-color .15s}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+input::placeholder,textarea::placeholder{color:var(--g4)}
 .srch{width:100%;padding:6px 9px 6px 28px}
 .filters{display:flex;gap:4px;flex-wrap:wrap}
 .fbtn{padding:4px 11px;border-radius:3px;border:1px solid var(--border);background:var(--white);color:var(--g2);font-family:inherit;font-size:12px;cursor:pointer;transition:all .12s;white-space:nowrap}
 .fbtn:hover{border-color:var(--blue);color:var(--blue)}
 .fbtn.on{background:var(--blue);border-color:var(--blue);color:var(--white)}
+.btn-add-ref{padding:4px 13px;border-radius:3px;border:1px solid var(--blue);background:var(--white);color:var(--blue);font-family:inherit;font-size:12px;cursor:pointer;transition:all .12s;white-space:nowrap;margin-left:auto}
+.btn-add-ref:hover{background:var(--blue-l)}
 
 /* STATS */
 .stats{padding:.55rem 2.5rem;border-bottom:1px solid var(--border);display:flex;gap:1.75rem;flex-wrap:wrap;align-items:center;background:var(--white)}
@@ -67,27 +68,39 @@ input::placeholder{color:var(--g4)}
 .area-pills{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
 .apill{font-size:11px;padding:2px 7px;border-radius:3px;border:1px solid var(--blue-m);background:var(--blue-l);color:var(--blue-d)}
 
+/* AREA BADGES — 4 tipos via padrão visual */
+.badge{font-size:11px;padding:2px 8px;border-radius:3px;white-space:nowrap;flex-shrink:0;border:1px solid}
+.badge-fil{background:var(--blue-l);color:var(--blue-d);border-color:var(--blue-m)}
+.badge-tec{background:var(--white);color:var(--blue);border-color:var(--blue)}
+.badge-lit{background:var(--blue-d);color:var(--white);border-color:var(--blue-d)}
+.badge-ouv{background:var(--g5);color:var(--g1);border-color:var(--g4)}
+
 /* GRID */
 .grid{padding:1.25rem 2.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:1px;background:var(--border)}
-.card{background:var(--white);padding:1rem 1.1rem;cursor:pointer;transition:background .1s;border-left:3px solid transparent}
+
+/* CARD */
+.card{background:var(--white);padding:1rem 1.1rem;cursor:pointer;transition:background .1s;border-left:3px solid transparent;position:relative}
 .card:hover{background:var(--blue-l)}
 .card.has-accent{border-left-color:var(--blue)}
+.card-custom{border-left-color:var(--g4)!important}
+.card-custom.has-accent{border-left-color:var(--blue)!important}
 .ctop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;gap:.5rem}
-.badge{font-size:11px;padding:2px 7px;border-radius:3px;border:1px solid var(--blue-m);background:var(--blue-l);color:var(--blue-d);white-space:nowrap;flex-shrink:0}
-.cyear{font-size:11px;color:var(--g3)}
+.cyear{font-size:11px;color:var(--g3);white-space:nowrap}
 .cautor{font-size:11px;color:var(--g3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.2rem}
 .cobra{font-size:13px;font-weight:600;color:var(--black);line-height:1.4;margin-bottom:.45rem}
 .cobs{font-size:12px;color:var(--g2);border-top:1px solid var(--g5);padding-top:.4rem;line-height:1.45}
 .cfoot{display:flex;align-items:center;margin-top:.55rem;gap:5px}
 .dot{width:5px;height:5px;border-radius:50%}
 .dot-on{background:var(--blue)}.dot-off{background:var(--g4)}
-.crit-tag{font-size:10px;padding:1px 6px;border-radius:2px;margin-left:auto;border:1px solid var(--g4);color:var(--g3)}
-.crit-br{border-color:var(--blue-m);color:var(--blue)}
+.custom-tag{font-size:10px;padding:1px 5px;border-radius:2px;margin-left:auto;border:1px solid var(--g4);color:var(--g3)}
+.btn-del{position:absolute;top:.6rem;right:.6rem;background:transparent;border:none;color:var(--g4);cursor:pointer;font-size:13px;line-height:1;padding:2px;display:none;transition:color .12s}
+.card:hover .btn-del{display:block}
+.btn-del:hover{color:var(--err)}
 
 /* MODAL BASE */
 .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999;align-items:center;justify-content:center;padding:1.5rem}
 .overlay.open{display:flex}
-.modal{background:var(--white);border:1px solid var(--border);border-radius:4px;width:100%;max-width:620px;max-height:88vh;overflow-y:auto;box-shadow:0 8px 28px rgba(0,0,0,.1)}
+.modal{background:var(--white);border:1px solid var(--border);border-radius:4px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 28px rgba(0,0,0,.1)}
 .mhdr{padding:1.1rem 1.4rem .9rem;border-bottom:1px solid var(--border);position:relative;border-top:3px solid var(--blue)}
 .mobra{font-size:1rem;font-weight:600;line-height:1.4;color:var(--black);padding-right:2.5rem;margin-bottom:.15rem}
 .mautor{font-size:11px;color:var(--g3);text-transform:uppercase;letter-spacing:.5px}
@@ -101,20 +114,20 @@ input::placeholder{color:var(--g4)}
 .finput{display:block;width:100%;padding:7px 9px;margin-bottom:.9rem}
 .fta{display:block;width:100%;min-height:120px;padding:8px 9px;background:var(--white);border:1px solid var(--border);border-radius:3px;color:var(--black);font-family:inherit;font-size:13px;resize:vertical;line-height:1.6;outline:none;transition:border-color .15s}
 .fta:focus{border-color:var(--blue)}
+.fselect{display:block;width:100%;padding:7px 9px;margin-bottom:.9rem;background:var(--white);border:1px solid var(--border);border-radius:3px;color:var(--black);font-family:inherit;font-size:13px;outline:none;cursor:pointer}
 .mactions{display:flex;align-items:center;gap:.6rem;margin-top:.8rem;flex-wrap:wrap}
 .btn-save{padding:7px 18px;background:var(--blue);border:none;border-radius:3px;color:var(--white);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
 .btn-save:hover{background:var(--blue-d)}
-.btn-save:disabled{opacity:.5;cursor:default}
 .btn-open{padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:3px;color:var(--blue);font-family:inherit;font-size:12px;cursor:pointer;transition:all .12s;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
 .btn-open:hover{border-color:var(--blue);background:var(--blue-l)}
 .msg-ok{font-size:12px;color:var(--blue);opacity:0;transition:opacity .3s}
 .msg-ok.show{opacity:1}
 
-/* SYNC CONFIG MODAL */
+/* SYNC CONFIG */
 .scfg-section{margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--g5)}
 .scfg-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.scfg-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g2);margin-bottom:.65rem}
-.scfg-hint{font-size:12px;color:var(--g3);margin-bottom:.75rem;line-height:1.5}
+.scfg-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g2);margin-bottom:.6rem}
+.scfg-hint{font-size:12px;color:var(--g3);margin-bottom:.7rem;line-height:1.55}
 .scfg-hint a{color:var(--blue);text-decoration:none}
 .scfg-hint a:hover{text-decoration:underline}
 .scfg-input{display:block;width:100%;padding:7px 9px;margin-bottom:.5rem}
@@ -129,16 +142,22 @@ input::placeholder{color:var(--g4)}
 .banner-err{background:var(--err-l);color:var(--err);border:1px solid #f0b0b0;display:block}
 .banner-warn{background:var(--warn-l);color:var(--warn);border:1px solid #f0cfa0;display:block}
 
-/* SESSION NOTES */
+/* COMMENTS / IMPRESSÕES */
 .sn-wrap{margin:1.25rem 2.5rem 2rem;border:1px solid var(--border);border-radius:4px;overflow:hidden}
 .sn-hdr{padding:.55rem 1rem;background:var(--g5);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .sn-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--g2)}
-.sn-btns{display:flex;gap:.4rem}
 .btn-sn{padding:3px 9px;border:1px solid var(--border);border-radius:3px;background:var(--white);color:var(--g2);font-family:inherit;font-size:11px;cursor:pointer;transition:all .12s}
 .btn-sn:hover{border-color:var(--blue);color:var(--blue)}
 .sn-ta{width:100%;min-height:150px;padding:.85rem 1rem;background:var(--white);border:none;color:var(--black);font-family:inherit;font-size:13px;line-height:1.65;resize:vertical;outline:none}
 .sn-ta::placeholder{color:var(--g4)}
+
+/* EMPTY */
 .empty{grid-column:1/-1;text-align:center;padding:3rem;color:var(--g4);font-size:13px}
+
+/* ADD REF FORM */
+.add-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem .9rem}
+.add-form-grid .full{grid-column:1/-1}
+.field-group{display:flex;flex-direction:column;gap:4px}
 </style>
 </head>
 <body>
@@ -149,13 +168,11 @@ input::placeholder{color:var(--g4)}
     <div>
       <div class="hdr-sup">Seminário de Estudos</div>
       <h1 class="hdr-title"><strong>Wagner</strong> — Referências &amp; Notas</h1>
-      <p class="hdr-sub">14 referências · filosofia, musicologia, crítica literária · notas coletivas por sessão</p>
+      <p class="hdr-sub">Crítica literária · Técnica musical · Filosofia · Para treinar o ouvido</p>
     </div>
-    <div class="hdr-right">
-      <div class="hdr-actions">
-        <button class="btn-hdr" onclick="exportText()">↓ Exportar texto</button>
-        <button class="btn-hdr primary" onclick="openSyncConfig()">⚙ Sincronização</button>
-      </div>
+    <div class="hdr-actions">
+      <button class="btn-hdr" onclick="exportText()">↓ Exportar texto</button>
+      <button class="btn-hdr primary" onclick="openSyncConfig()">⚙ Sincronização</button>
     </div>
   </div>
 </div>
@@ -182,25 +199,25 @@ input::placeholder{color:var(--g4)}
   <div class="filters" id="filters">
     <button class="fbtn on" data-f="all">Todas</button>
     <button class="fbtn" data-f="a:Filosofia">Filosofia</button>
-    <button class="fbtn" data-f="a:Literária">Literária</button>
-    <button class="fbtn" data-f="a:Musicologia">Musicologia</button>
-    <button class="fbtn" data-f="a:Técnica">Técnica</button>
-    <button class="fbtn" data-f="a:Brasil">Brasil</button>
-    <button class="fbtn" data-f="c:Internacional">Internacional</button>
-    <button class="fbtn" data-f="c:Brasileira">Brasileira</button>
+    <button class="fbtn" data-f="a:Crítica Literária">Crítica Literária</button>
+    <button class="fbtn" data-f="a:Técnica Musical">Técnica Musical</button>
+    <button class="fbtn" data-f="a:Para Treinar o Ouvido">Para Treinar o Ouvido</button>
     <button class="fbtn" data-f="s:links">Com link</button>
     <button class="fbtn" data-f="s:notas">Com notas</button>
   </div>
+  <button class="btn-add-ref" onclick="openAddRef()">+ Adicionar referência</button>
 </div>
 
 <div class="stats" id="stats"></div>
 <div class="grid" id="grid"></div>
 
+<!-- COMENTÁRIOS / IMPRESSÕES -->
 <div class="sn-wrap">
   <div class="sn-hdr">
-    <span class="sn-title">Notas da Sessão</span>
+    <span class="sn-title">Comentários &amp; Impressões da Sessão</span>
+    <button class="btn-sn" onclick="exportText()">Exportar texto</button>
   </div>
-  <textarea class="sn-ta" id="sn-ta" placeholder="Notas gerais da sessão de estudo — conexões entre obras, temas emergentes, perguntas para discussão, sínteses…"></textarea>
+  <textarea class="sn-ta" id="sn-ta" placeholder="Comentários gerais, impressões da sessão, conexões entre obras, temas emergentes, perguntas para discussão…"></textarea>
 </div>
 
 <!-- MODAL: Referência -->
@@ -227,6 +244,57 @@ input::placeholder{color:var(--g4)}
   </div>
 </div>
 
+<!-- MODAL: Adicionar referência -->
+<div class="overlay" id="ov-add" onclick="if(event.target===this)closeAddRef()">
+  <div class="modal" style="max-width:560px">
+    <div class="mhdr">
+      <div class="mobra">Adicionar referência</div>
+      <div class="mautor">A referência será salva e visível para o grupo</div>
+      <button class="mclose" onclick="closeAddRef()">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="add-form-grid">
+        <div class="field-group full">
+          <label class="flbl">Obra / Título</label>
+          <input type="text" class="finput" id="add-obra" placeholder="Título completo da obra" style="margin-bottom:0">
+        </div>
+        <div class="field-group">
+          <label class="flbl">Autor</label>
+          <input type="text" class="finput" id="add-autor" placeholder="Nome do autor" style="margin-bottom:0">
+        </div>
+        <div class="field-group">
+          <label class="flbl">Ano</label>
+          <input type="number" class="finput" id="add-ano" placeholder="Ex: 1998" min="1700" max="2099" style="margin-bottom:0">
+        </div>
+        <div class="field-group full">
+          <label class="flbl">Classificação</label>
+          <select class="fselect" id="add-area" style="margin-bottom:0">
+            <option value="">Selecione…</option>
+            <option value="Filosofia">Filosofia</option>
+            <option value="Crítica Literária">Crítica Literária</option>
+            <option value="Técnica Musical">Técnica Musical</option>
+            <option value="Para Treinar o Ouvido">Para Treinar o Ouvido</option>
+          </select>
+        </div>
+        <div class="field-group full">
+          <label class="flbl">Observação <span>— nota curta para o grupo</span></label>
+          <input type="text" class="finput" id="add-obs" placeholder="Ex: Boa entrada para iniciantes, disponível online…" style="margin-bottom:0">
+        </div>
+        <div class="field-group full">
+          <label class="flbl">Link <span>— opcional</span></label>
+          <input type="url" class="finput" id="add-link" placeholder="https://…" style="margin-bottom:0">
+        </div>
+      </div>
+      <div class="mactions" style="margin-top:1rem">
+        <button class="btn-save" onclick="saveNewRef()">Adicionar</button>
+        <button class="btn-open" onclick="closeAddRef()">Cancelar</button>
+        <span class="msg-ok" id="msg-add">✓ Adicionado</span>
+      </div>
+      <div id="banner-add" class="status-banner"></div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: Sync Config -->
 <div class="overlay" id="ov-sync" onclick="if(event.target===this)closeSyncConfig()">
   <div class="modal" style="max-width:540px">
@@ -236,187 +304,144 @@ input::placeholder{color:var(--g4)}
       <button class="mclose" onclick="closeSyncConfig()">✕</button>
     </div>
     <div class="mbody">
-
-      <!-- Seção 1: API Key -->
       <div class="scfg-section">
         <div class="scfg-title">1 · Sua chave de API</div>
-        <p class="scfg-hint">
-          Crie uma conta gratuita em <a href="https://jsonbin.io" target="_blank">jsonbin.io</a>,
-          acesse <strong>API Keys</strong> no menu e copie sua <strong>Master Key</strong>.
-          Ela fica salva só no seu navegador — nunca é compartilhada.
-        </p>
+        <p class="scfg-hint">Crie conta gratuita em <a href="https://jsonbin.io" target="_blank">jsonbin.io</a>, acesse <strong>API Keys</strong> e copie a <strong>Master Key</strong>. Fica salva só no seu navegador.</p>
         <input class="scfg-input" type="password" id="cfg-key" placeholder="$2b$10$…">
         <div id="banner-key" class="status-banner"></div>
       </div>
-
-      <!-- Seção 2: Bin compartilhado -->
       <div class="scfg-section">
         <div class="scfg-title">2 · Bin do grupo</div>
-        <p class="scfg-hint">
-          Se você é o <strong>primeiro do grupo</strong>, clique em "Criar bin" para gerar o espaço compartilhado.<br>
-          Se alguém já criou, cole o <strong>Bin ID</strong> que a pessoa compartilhou.
-        </p>
+        <p class="scfg-hint">Se você é o primeiro do grupo, clique em <strong>Criar bin</strong>. Se alguém já criou, cole o Bin ID compartilhado.</p>
         <div class="scfg-row">
           <input class="scfg-input" type="text" id="cfg-bin" placeholder="Cole o Bin ID aqui…">
           <button class="btn-sync" style="flex-shrink:0;padding:7px 13px" onclick="doCreateBin()">Criar bin</button>
         </div>
         <div id="banner-bin" class="status-banner"></div>
       </div>
-
-      <!-- Seção 3: Link para compartilhar -->
       <div class="scfg-section" id="share-section" style="display:none">
         <div class="scfg-title">3 · Compartilhar com o grupo</div>
-        <p class="scfg-hint">
-          Envie este link para os colegas. Cada um precisará entrar com a
-          <strong>mesma Master Key</strong> (passo 1) para poder salvar edições.
-        </p>
+        <p class="scfg-hint">Envie este link para os colegas. Cada um precisará entrar com a mesma Master Key para salvar edições.</p>
         <div class="share-box">
           <span class="share-url" id="share-url"></span>
           <button class="btn-copy" onclick="copyShareUrl()">Copiar</button>
         </div>
         <div id="banner-share" class="status-banner"></div>
       </div>
-
-      <!-- Ações -->
       <div style="display:flex;gap:.5rem;justify-content:flex-end;padding-top:.75rem;border-top:1px solid var(--g5)">
         <button class="btn-sync" onclick="closeSyncConfig()">Fechar</button>
         <button class="btn-save" onclick="saveSyncConfig()">Salvar configuração</button>
       </div>
-
     </div>
   </div>
 </div>
 
 <script>
-/* ── DATA ── */
-const REFS=[
-  {id:'n1',autor:'Friedrich Nietzsche',obra:'O Nascimento da Tragédia (caps. 1–6)',ano:1872,area:'Filosofia',obs:'Seguro — não revela enredo',critica:'Internacional'},
-  {id:'n2',autor:'Friedrich Nietzsche',obra:'O Caso Wagner',ano:1888,area:'Filosofia',obs:'Par com Nascimento da Tragédia',critica:'Internacional'},
-  {id:'b1',autor:'Charles Baudelaire',obra:'Ensaio sobre Wagner',ano:1861,area:'Literária',obs:'Totalmente seguro — só efeitos',critica:'Internacional'},
-  {id:'m1',autor:'Thomas Mann',obra:'Sofrimentos e Grandeza de Richard Wagner',ano:1933,area:'Literária',obs:'Leitura seletiva recomendada',critica:'Internacional'},
-  {id:'mg1',autor:'Bryan Magee',obra:'The Tristan Chord: Wagner and Philosophy',ano:2000,area:'Filosofia',obs:'Melhor entrada para o grupo misto',critica:'Internacional'},
-  {id:'nt1',autor:'Jean-Jacques Nattiez',obra:'Wagner Androgyne',ano:1990,area:'Musicologia',obs:'Musical + literário + filosófico',critica:'Internacional'},
-  {id:'k1',autor:'Ernst Kurth',obra:'Romantische Harmonik und ihre Krise in Wagners Tristan',ano:1920,area:'Técnica',obs:'Texto fundador — em alemão',critica:'Internacional'},
-  {id:'d1',autor:'Carl Dahlhaus',obra:"Richard Wagner's Music Dramas",ano:1979,area:'Técnica',obs:'Acorde dentro da dramaturgia',critica:'Internacional'},
-  {id:'rb1',autor:'Robert Bailey',obra:'Prelude and Transfiguration from Tristan und Isolde (Norton Critical Scores)',ano:1985,area:'Técnica',obs:'Partitura anotada + ensaios',critica:'Internacional'},
-  {id:'f1',autor:'Allen Forte',obra:'The Harmonic Organization of The Rite of Spring',ano:1978,area:'Técnica',obs:'Perspectiva de Wagner a Schoenberg',critica:'Internacional'},
-  {id:'w1',autor:'José Miguel Wisnik',obra:'O Som e o Sentido (Companhia das Letras)',ano:1989,area:'Brasil',obs:'Wagner como crise do tonalismo; acessível e erudito',critica:'Brasileira'},
-  {id:'mm1',autor:'Lorenzo Mammì',obra:'A Fugitiva: Ensaios sobre Música (Companhia das Letras)',ano:2017,area:'Brasil',obs:'Inclui ensaios sobre Wagner e ópera',critica:'Brasileira'},
-  {id:'ne1',autor:'Arthur Nestrovski',obra:'Tudo Tem a Ver — Literatura e Música (Editora Todavia)',ano:2020,area:'Brasil',obs:'Debussy, Beethoven, cruzamento música-literatura',critica:'Brasileira'},
-  {id:'ne2',autor:'Arthur Nestrovski',obra:'Debussy e Poe (em Ironias da Modernidade)',ano:1997,area:'Brasil',obs:'Contexto simbolista, ressonâncias wagnerianas',critica:'Brasileira'},
+/* ── REFERENCIAS BASE ── */
+const BASE_REFS=[
+  {id:'n1',autor:'Friedrich Nietzsche',obra:'O Nascimento da Tragédia (caps. 1–6)',ano:1872,area:'Filosofia',obs:'Seguro — não revela enredo'},
+  {id:'n2',autor:'Friedrich Nietzsche',obra:'O Caso Wagner',ano:1888,area:'Filosofia',obs:'Par com Nascimento da Tragédia'},
+  {id:'mg1',autor:'Bryan Magee',obra:'The Tristan Chord: Wagner and Philosophy',ano:2000,area:'Filosofia',obs:'Melhor entrada para o grupo misto'},
+  {id:'b1',autor:'Charles Baudelaire',obra:'Ensaio sobre Wagner',ano:1861,area:'Crítica Literária',obs:'Totalmente seguro — só efeitos'},
+  {id:'m1',autor:'Thomas Mann',obra:'Sofrimentos e Grandeza de Richard Wagner',ano:1933,area:'Crítica Literária',obs:'Leitura seletiva recomendada'},
+  {id:'nt1',autor:'Jean-Jacques Nattiez',obra:'Wagner Androgyne',ano:1990,area:'Crítica Literária',obs:'Musical + literário + filosófico'},
+  {id:'w1',autor:'José Miguel Wisnik',obra:'O Som e o Sentido (Companhia das Letras)',ano:1989,area:'Crítica Literária',obs:'Wagner como crise do tonalismo; acessível e erudito'},
+  {id:'mm1',autor:'Lorenzo Mammì',obra:'A Fugitiva: Ensaios sobre Música (Companhia das Letras)',ano:2017,area:'Crítica Literária',obs:'Inclui ensaios sobre Wagner e ópera'},
+  {id:'ne1',autor:'Arthur Nestrovski',obra:'Tudo Tem a Ver — Literatura e Música (Editora Todavia)',ano:2020,area:'Crítica Literária',obs:'Debussy, Beethoven, cruzamento música-literatura'},
+  {id:'ne2',autor:'Arthur Nestrovski',obra:'Debussy e Poe (em Ironias da Modernidade)',ano:1997,area:'Crítica Literária',obs:'Contexto simbolista, ressonâncias wagnerianas'},
+  {id:'k1',autor:'Ernst Kurth',obra:'Romantische Harmonik und ihre Krise in Wagners Tristan',ano:1920,area:'Técnica Musical',obs:'Texto fundador — em alemão'},
+  {id:'d1',autor:'Carl Dahlhaus',obra:"Richard Wagner's Music Dramas",ano:1979,area:'Técnica Musical',obs:'Acorde dentro da dramaturgia'},
+  {id:'rb1',autor:'Robert Bailey',obra:'Prelude and Transfiguration from Tristan und Isolde (Norton Critical Scores)',ano:1985,area:'Técnica Musical',obs:'Partitura anotada + ensaios'},
+  {id:'f1',autor:'Allen Forte',obra:'The Harmonic Organization of The Rite of Spring',ano:1978,area:'Técnica Musical',obs:'Perspectiva de Wagner a Schoenberg'},
 ];
 
+const AREA_CLASS={
+  'Filosofia':'badge-fil',
+  'Crítica Literária':'badge-lit',
+  'Técnica Musical':'badge-tec',
+  'Para Treinar o Ouvido':'badge-ouv',
+};
+
 /* ── LOCAL STATE ── */
-const LS_L='wgn-links',LS_N='wgn-notes',LS_S='wgn-session',LS_KEY='wgn-apikey',LS_BIN='wgn-binid';
+const LS_L='wgn-links',LS_N='wgn-notes',LS_S='wgn-session',LS_CR='wgn-custom',LS_KEY='wgn-apikey',LS_BIN='wgn-binid';
 let links=JSON.parse(localStorage.getItem(LS_L)||'{}');
 let notes=JSON.parse(localStorage.getItem(LS_N)||'{}');
+let customRefs=JSON.parse(localStorage.getItem(LS_CR)||'[]');
 let curRef=null,curFilter='all',curSearch='';
+
+function allRefs(){return[...BASE_REFS,...customRefs]}
 
 function saveLocal(){
   localStorage.setItem(LS_L,JSON.stringify(links));
   localStorage.setItem(LS_N,JSON.stringify(notes));
+  localStorage.setItem(LS_CR,JSON.stringify(customRefs));
 }
 
-/* ── JSONBIN API ── */
+/* ── JSONBIN ── */
 const JB='https://api.jsonbin.io/v3/b';
-
-function jbHeaders(key,extra){
-  const h={'Content-Type':'application/json'};
-  if(key)h['X-Master-Key']=key;
-  return Object.assign(h,extra||{});
-}
-
+function jbH(key,extra){const h={'Content-Type':'application/json'};if(key)h['X-Master-Key']=key;return Object.assign(h,extra||{})}
 async function jbCreate(key,data){
-  const r=await fetch(JB,{method:'POST',headers:jbHeaders(key,{'X-Bin-Name':'Seminário Wagner','X-Bin-Private':'false'}),body:JSON.stringify(data)});
+  const r=await fetch(JB,{method:'POST',headers:jbH(key,{'X-Bin-Name':'Seminário Wagner','X-Bin-Private':'false'}),body:JSON.stringify(data)});
   if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||`HTTP ${r.status}`)}
   return (await r.json()).metadata.id;
 }
-
 async function jbRead(binId,key){
   const r=await fetch(`${JB}/${binId}/latest`,{headers:key?{'X-Master-Key':key}:{}});
   if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||`HTTP ${r.status}`)}
   return (await r.json()).record;
 }
-
 async function jbWrite(binId,key,data){
-  const r=await fetch(`${JB}/${binId}`,{method:'PUT',headers:jbHeaders(key),body:JSON.stringify(data)});
+  const r=await fetch(`${JB}/${binId}`,{method:'PUT',headers:jbH(key),body:JSON.stringify(data)});
   if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||`HTTP ${r.status}`)}
-  return await r.json();
 }
 
-/* ── SYNC STATE ── */
-let syncConfigured=false;
-
-function getSyncCfg(){
-  return{key:localStorage.getItem(LS_KEY)||'',binId:localStorage.getItem(LS_BIN)||''};
-}
-
+/* ── SYNC ── */
+function getSyncCfg(){return{key:localStorage.getItem(LS_KEY)||'',binId:localStorage.getItem(LS_BIN)||''}}
 function setSyncStatus(state,label,ts){
   const el=document.getElementById('sync-status');
-  const lb=document.getElementById('sync-label');
   el.className='sync-status s-'+state;
-  lb.textContent=label;
-  if(ts)document.getElementById('sync-ts').textContent=ts;
-  else document.getElementById('sync-ts').textContent='';
+  document.getElementById('sync-label').textContent=label;
+  document.getElementById('sync-ts').textContent=ts||'';
 }
-
 function initSyncBar(){
   const{key,binId}=getSyncCfg();
   const bar=document.getElementById('sync-bar');
   if(binId){
     bar.classList.remove('hidden');
-    syncConfigured=true;
     document.getElementById('btn-pull').disabled=false;
     document.getElementById('btn-push').disabled=!key;
     setSyncStatus('none','Pronto · '+(key?'leitura e escrita':'somente leitura'));
-  }else{
-    bar.classList.add('hidden');
-    syncConfigured=false;
-  }
+  }else bar.classList.add('hidden');
 }
-
-function applyRemoteState(remote){
-  if(remote.links)Object.assign(links,remote.links);
-  if(remote.notes)Object.assign(notes,remote.notes);
-  if(remote.session){
-    const snt=document.getElementById('sn-ta');
-    snt.value=remote.session;
-    localStorage.setItem(LS_S,remote.session);
-  }
-  saveLocal();
-  renderStats();renderGrid();
+function getState(){return{links,notes,session:document.getElementById('sn-ta').value,customRefs,ts:new Date().toISOString()}}
+function applyState(s){
+  if(s.links)Object.assign(links,s.links);
+  if(s.notes)Object.assign(notes,s.notes);
+  if(s.customRefs)customRefs=[...s.customRefs];
+  if(s.session){document.getElementById('sn-ta').value=s.session;localStorage.setItem(LS_S,s.session)}
+  saveLocal();renderStats();renderGrid();
 }
-
 async function doPull(){
-  const{key,binId}=getSyncCfg();
-  if(!binId)return;
-  const btn=document.getElementById('btn-pull');
-  btn.disabled=true;
+  const{key,binId}=getSyncCfg();if(!binId)return;
+  document.getElementById('btn-pull').disabled=true;
   setSyncStatus('loading','Carregando…');
   try{
-    const remote=await jbRead(binId,key);
-    applyRemoteState(remote);
-    const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    setSyncStatus('ok','Sincronizado','Atualizado às '+now);
-  }catch(e){
-    setSyncStatus('error','Erro ao carregar: '+e.message);
-  }finally{btn.disabled=false}
+    applyState(await jbRead(binId,key));
+    const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    setSyncStatus('ok','Sincronizado','Atualizado às '+t);
+  }catch(e){setSyncStatus('error','Erro: '+e.message)}
+  finally{document.getElementById('btn-pull').disabled=false}
 }
-
 async function doPush(){
-  const{key,binId}=getSyncCfg();
-  if(!binId||!key)return;
-  const btn=document.getElementById('btn-push');
-  btn.disabled=true;
+  const{key,binId}=getSyncCfg();if(!binId||!key)return;
+  document.getElementById('btn-push').disabled=true;
   setSyncStatus('loading','Enviando…');
   try{
-    const snt=document.getElementById('sn-ta');
-    await jbWrite(binId,key,{links,notes,session:snt.value,ts:new Date().toISOString()});
-    const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-    setSyncStatus('ok','Enviado com sucesso','Enviado às '+now);
-  }catch(e){
-    setSyncStatus('error','Erro ao enviar: '+e.message);
-  }finally{btn.disabled=false}
+    await jbWrite(binId,key,getState());
+    const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    setSyncStatus('ok','Enviado','Enviado às '+t);
+  }catch(e){setSyncStatus('error','Erro: '+e.message)}
+  finally{document.getElementById('btn-push').disabled=false}
 }
 
 /* ── SYNC CONFIG MODAL ── */
@@ -424,134 +449,131 @@ function openSyncConfig(){
   const{key,binId}=getSyncCfg();
   document.getElementById('cfg-key').value=key;
   document.getElementById('cfg-bin').value=binId;
-  updateShareSection();
-  clearBanners();
+  updateShareSection();clearBanners();
   document.getElementById('ov-sync').classList.add('open');
 }
-
 function closeSyncConfig(){document.getElementById('ov-sync').classList.remove('open')}
-
-function clearBanners(){
-  ['banner-key','banner-bin','banner-share'].forEach(id=>{
-    const el=document.getElementById(id);
-    el.className='status-banner';el.textContent='';
-  });
-}
-
-function showBanner(id,type,msg){
-  const el=document.getElementById(id);
-  el.className='status-banner banner-'+type;
-  el.textContent=msg;
-}
-
+function clearBanners(){['banner-key','banner-bin','banner-share'].forEach(id=>{const e=document.getElementById(id);e.className='status-banner';e.textContent=''})}
+function showBanner(id,type,msg){const e=document.getElementById(id);e.className='status-banner banner-'+type;e.textContent=msg}
 function updateShareSection(){
   const binId=document.getElementById('cfg-bin').value.trim()||localStorage.getItem(LS_BIN)||'';
   const sec=document.getElementById('share-section');
-  if(binId){
-    sec.style.display='block';
-    const url=location.href.split('#')[0]+'#bin='+binId;
-    document.getElementById('share-url').textContent=url;
-  }else{
-    sec.style.display='none';
-  }
+  if(binId){sec.style.display='block';document.getElementById('share-url').textContent=location.href.split('#')[0]+'#bin='+binId}
+  else sec.style.display='none';
 }
-
 async function doCreateBin(){
   const key=document.getElementById('cfg-key').value.trim();
-  if(!key){showBanner('banner-key','err','Informe a Master Key primeiro (passo 1).');return;}
-  const btn=event.target;btn.disabled=true;btn.textContent='Criando…';
-  clearBanners();
+  if(!key){showBanner('banner-key','err','Informe a Master Key primeiro.');return}
+  const btn=event.target;btn.disabled=true;btn.textContent='Criando…';clearBanners();
   try{
-    const snt=document.getElementById('sn-ta');
-    const binId=await jbCreate(key,{links,notes,session:snt.value,ts:new Date().toISOString()});
+    const binId=await jbCreate(key,getState());
     document.getElementById('cfg-bin').value=binId;
     showBanner('banner-bin','ok','✓ Bin criado: '+binId+' — salve a configuração para ativar.');
     updateShareSection();
-  }catch(e){
-    showBanner('banner-bin','err','Erro: '+e.message+'. Verifique a Master Key.');
-  }finally{btn.disabled=false;btn.textContent='Criar bin'}
+  }catch(e){showBanner('banner-bin','err','Erro: '+e.message)}
+  finally{btn.disabled=false;btn.textContent='Criar bin'}
 }
-
 function saveSyncConfig(){
   const key=document.getElementById('cfg-key').value.trim();
   const binId=document.getElementById('cfg-bin').value.trim();
   clearBanners();
-  if(!binId){showBanner('banner-bin','warn','Informe ou crie um Bin ID antes de salvar.');return;}
-  localStorage.setItem(LS_KEY,key);
-  localStorage.setItem(LS_BIN,binId);
+  if(!binId){showBanner('banner-bin','warn','Informe ou crie um Bin ID antes de salvar.');return}
+  localStorage.setItem(LS_KEY,key);localStorage.setItem(LS_BIN,binId);
   updateShareSection();
-  showBanner('banner-share','ok','✓ Configuração salva. Use os botões "Atualizar" e "Enviar" na barra de sincronização.');
-  initSyncBar();
-  setTimeout(()=>closeSyncConfig(),1800);
+  showBanner('banner-share','ok','✓ Configuração salva.');
+  initSyncBar();setTimeout(()=>closeSyncConfig(),1800);
 }
-
 function copyShareUrl(){
-  const url=document.getElementById('share-url').textContent;
-  navigator.clipboard.writeText(url).then(()=>{
+  navigator.clipboard.writeText(document.getElementById('share-url').textContent).then(()=>{
     const btn=event.target;btn.textContent='Copiado!';
-    showBanner('banner-share','ok','Link copiado para a área de transferência.');
+    showBanner('banner-share','ok','Link copiado.');
     setTimeout(()=>btn.textContent='Copiar',2000);
   });
 }
 
-/* ── CHECK URL HASH ── */
-function checkHash(){
-  const hash=location.hash;
-  if(hash.includes('bin=')){
-    const binId=hash.split('bin=')[1].split('&')[0];
-    if(binId&&!localStorage.getItem(LS_BIN)){
-      localStorage.setItem(LS_BIN,binId);
-      setTimeout(()=>{
-        openSyncConfig();
-        document.getElementById('cfg-bin').value=binId;
-        showBanner('banner-key','warn','Bin ID detectado no link. Informe sua Master Key para sincronizar.');
-        updateShareSection();
-      },400);
-    }
-  }
+/* ── ADD REFERENCE ── */
+function openAddRef(){
+  document.getElementById('add-obra').value='';
+  document.getElementById('add-autor').value='';
+  document.getElementById('add-ano').value='';
+  document.getElementById('add-area').value='';
+  document.getElementById('add-obs').value='';
+  document.getElementById('add-link').value='';
+  document.getElementById('msg-add').classList.remove('show');
+  document.getElementById('banner-add').className='status-banner';
+  document.getElementById('ov-add').classList.add('open');
+}
+function closeAddRef(){document.getElementById('ov-add').classList.remove('open')}
+function saveNewRef(){
+  const obra=document.getElementById('add-obra').value.trim();
+  const autor=document.getElementById('add-autor').value.trim();
+  const area=document.getElementById('add-area').value;
+  const ano=parseInt(document.getElementById('add-ano').value)||null;
+  const obs=document.getElementById('add-obs').value.trim();
+  const lv=document.getElementById('add-link').value.trim();
+  const banner=document.getElementById('banner-add');
+  if(!obra||!autor||!area){banner.className='status-banner banner-err';banner.textContent='Preencha ao menos Obra, Autor e Classificação.';return}
+  const id='custom-'+Date.now();
+  customRefs.push({id,autor,obra,ano,area,obs,custom:true});
+  if(lv)links[id]=lv;
+  saveLocal();renderStats();renderGrid();
+  const msg=document.getElementById('msg-add');
+  msg.classList.add('show');banner.className='status-banner';
+  setTimeout(()=>{msg.classList.remove('show');closeAddRef()},1200);
+}
+function deleteRef(id,e){
+  e.stopPropagation();
+  if(!confirm('Remover esta referência?'))return;
+  customRefs=customRefs.filter(r=>r.id!==id);
+  delete links[id];delete notes[id];
+  saveLocal();renderStats();renderGrid();
 }
 
-/* ── GRID / CARDS ── */
+/* ── GRID ── */
 function getFiltered(){
-  return REFS.filter(r=>{
+  return allRefs().filter(r=>{
     const q=curSearch.toLowerCase();
-    const ok=!q||r.autor.toLowerCase().includes(q)||r.obra.toLowerCase().includes(q)||r.obs.toLowerCase().includes(q);
+    const ok=!q||r.autor.toLowerCase().includes(q)||r.obra.toLowerCase().includes(q)||(r.obs||'').toLowerCase().includes(q);
     if(!ok)return false;
     if(curFilter==='all')return true;
     if(curFilter.startsWith('a:'))return r.area===curFilter.slice(2);
-    if(curFilter.startsWith('c:'))return r.critica===curFilter.slice(2);
     if(curFilter==='s:links')return!!links[r.id];
     if(curFilter==='s:notas')return!!(notes[r.id]&&notes[r.id].trim());
     return true;
   });
 }
-
 function renderStats(){
   const nl=Object.values(links).filter(Boolean).length;
   const nn=Object.values(notes).filter(v=>v&&v.trim()).length;
-  const areas={};REFS.forEach(r=>{areas[r.area]=(areas[r.area]||0)+1});
+  const total=allRefs().length;
+  const areas={};allRefs().forEach(r=>{areas[r.area]=(areas[r.area]||0)+1});
   document.getElementById('stats').innerHTML=`
-    <div class="stat-item"><span class="snum">${REFS.length}</span><span class="slbl">referências</span></div>
+    <div class="stat-item"><span class="snum">${total}</span><span class="slbl">referências</span></div>
     <div class="stat-item"><span class="snum">${nl}</span><span class="slbl">com link</span></div>
     <div class="stat-item"><span class="snum">${nn}</span><span class="slbl">anotadas</span></div>
     <div class="area-pills">${Object.entries(areas).map(([a,n])=>`<span class="apill">${n}\u00a0${a.toLowerCase()}</span>`).join('')}</div>`;
 }
-
 function renderGrid(){
   const g=document.getElementById('grid');
   const list=getFiltered();
   if(!list.length){g.innerHTML='<div class="empty">Nenhuma referência encontrada.</div>';return;}
   g.innerHTML=list.map(r=>{
     const hl=!!links[r.id],hn=!!(notes[r.id]&&notes[r.id].trim());
-    return `<div class="card${hl||hn?' has-accent':''}" onclick="openModal('${r.id}')">
-      <div class="ctop"><span class="badge">${r.area}</span><span class="cyear">${r.ano}</span></div>
+    const bc=AREA_CLASS[r.area]||'badge-fil';
+    const isCustom=!!r.custom;
+    return `<div class="card${hl||hn?' has-accent':''}${isCustom?' card-custom':''}" onclick="openModal('${r.id}')">
+      ${isCustom?`<button class="btn-del" onclick="deleteRef('${r.id}',event)" title="Remover">✕</button>`:''}
+      <div class="ctop">
+        <span class="badge ${bc}">${r.area}</span>
+        <span class="cyear">${r.ano||'—'}</span>
+      </div>
       <div class="cautor">${r.autor}</div>
       <div class="cobra">${r.obra}</div>
-      <div class="cobs">${r.obs}</div>
+      ${r.obs?`<div class="cobs">${r.obs}</div>`:''}
       <div class="cfoot">
         <span class="dot ${hl?'dot-on':'dot-off'}" title="${hl?'Link salvo':'Sem link'}"></span>
         <span class="dot ${hn?'dot-on':'dot-off'}" title="${hn?'Tem notas':'Sem notas'}"></span>
-        <span class="crit-tag ${r.critica==='Brasileira'?'crit-br':''}">${r.critica}</span>
+        ${isCustom?'<span class="custom-tag" style="margin-left:auto">adicionada pelo grupo</span>':''}
       </div>
     </div>`;
   }).join('');
@@ -559,11 +581,13 @@ function renderGrid(){
 
 /* ── MODAL REF ── */
 function openModal(id){
-  const r=REFS.find(x=>x.id===id);if(!r)return;curRef=r;
+  const r=allRefs().find(x=>x.id===id);if(!r)return;curRef=r;
   document.getElementById('m-obra').textContent=r.obra;
   document.getElementById('m-autor').textContent=r.autor;
-  document.getElementById('m-meta').innerHTML=`<span class="badge">${r.area}</span><span style="font-size:12px;color:var(--g3)">${r.ano}</span><span class="crit-tag ${r.critica==='Brasileira'?'crit-br':''}">${r.critica}</span>`;
-  document.getElementById('m-obs').textContent=r.obs;
+  const bc=AREA_CLASS[r.area]||'badge-fil';
+  document.getElementById('m-meta').innerHTML=`<span class="badge ${bc}">${r.area}</span><span style="font-size:12px;color:var(--g3)">${r.ano||''}</span>`;
+  const obsEl=document.getElementById('m-obs');
+  if(r.obs){obsEl.textContent=r.obs;obsEl.style.display='block'}else obsEl.style.display='none';
   const lv=links[r.id]||'';
   document.getElementById('m-link').value=lv;
   document.getElementById('m-notes').value=notes[r.id]||'';
@@ -585,7 +609,6 @@ document.getElementById('btn-save').addEventListener('click',()=>{
   msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2000);
   renderStats();renderGrid();
 });
-
 document.getElementById('m-link').addEventListener('input',()=>{
   const lv=document.getElementById('m-link').value.trim();
   const ba=document.getElementById('btn-open');
@@ -601,22 +624,22 @@ document.getElementById('filters').addEventListener('click',e=>{
 });
 document.getElementById('srch').addEventListener('input',e=>{curSearch=e.target.value.trim();renderGrid()});
 
-/* ── SESSION NOTES ── */
+/* ── COMENTÁRIOS / IMPRESSÕES ── */
 const snt=document.getElementById('sn-ta');
 snt.value=localStorage.getItem(LS_S)||'';
 snt.addEventListener('input',()=>localStorage.setItem(LS_S,snt.value));
 
-/* ── EXPORT TEXT ── */
+/* ── EXPORT ── */
 function exportText(){
   let t='SEMINÁRIO WAGNER — NOTAS\n'+'─'.repeat(36)+'\n';
   t+=new Date().toLocaleDateString('pt-BR',{dateStyle:'full'})+'\n\n';
   const sn=snt.value.trim();
-  if(sn)t+='NOTAS GERAIS\n'+'─'.repeat(20)+'\n'+sn+'\n\n';
-  const ann=REFS.filter(r=>notes[r.id]&&notes[r.id].trim());
+  if(sn)t+='COMENTÁRIOS & IMPRESSÕES\n'+'─'.repeat(20)+'\n'+sn+'\n\n';
+  const ann=allRefs().filter(r=>notes[r.id]&&notes[r.id].trim());
   if(ann.length){
     t+='NOTAS POR REFERÊNCIA\n'+'─'.repeat(20)+'\n\n';
     ann.forEach(r=>{
-      t+=`${r.autor}\n${r.obra} (${r.ano})\n`;
+      t+=`${r.autor}\n${r.obra}${r.ano?' ('+r.ano+')':''}\n`;
       if(links[r.id])t+=`Link: ${links[r.id]}\n`;
       t+='\n'+notes[r.id].trim()+'\n\n'+'─'.repeat(20)+'\n\n';
     });
@@ -627,20 +650,26 @@ function exportText(){
   });a.click();
 }
 
+/* ── URL HASH ── */
+function checkHash(){
+  const m=location.hash.match(/bin=([^&]+)/);
+  if(m&&!localStorage.getItem(LS_BIN)){
+    localStorage.setItem(LS_BIN,m[1]);
+    setTimeout(()=>{
+      openSyncConfig();
+      document.getElementById('cfg-bin').value=m[1];
+      updateShareSection();
+      showBanner('banner-key','warn','Bin ID detectado. Informe sua Master Key para sincronizar.');
+    },400);
+  }
+}
+
 /* ── KEYBOARD ── */
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeModal();closeSyncConfig()}
-});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeSyncConfig();closeAddRef()}});
 
 /* ── BOOT ── */
-initSyncBar();
-renderStats();
-renderGrid();
-checkHash();
-
-// Auto-pull on load se configurado
-const{key:bootKey,binId:bootBin}=getSyncCfg();
-if(bootBin){doPull();}
+initSyncBar();renderStats();renderGrid();checkHash();
+const{binId:bb}=getSyncCfg();if(bb)doPull();
 </script>
 </body>
 </html>
