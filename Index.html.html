@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seminário Wagner — Referências</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --blue:#1A5CB8;--blue-l:#EAF0FB;--blue-m:#C2D5F5;--blue-d:#0F3D80;
+  --black:#111;--g1:#333;--g2:#666;--g3:#999;--g4:#CCC;--g5:#EEE;
+  --white:#FFF;--border:#E0E0E0;
+  --ok:#1a7a3c;--ok-l:#e8f5ee;--warn:#b85c00;--warn-l:#fff4e6;--err:#b81a1a;--err-l:#fbeaea;
+}
+body{font-family:'Aptos','Aptos Display',Calibri,'Segoe UI',Arial,sans-serif;background:var(--white);color:var(--black);min-height:100vh;font-size:14px;line-height:1.5}
+
+/* HEADER */
+.hdr{background:var(--blue);color:var(--white);padding:1.6rem 2.5rem;border-bottom:3px solid var(--blue-d)}
+.hdr-row{display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:1rem}
+.hdr-sup{font-size:11px;letter-spacing:2.5px;text-transform:uppercase;opacity:.7;margin-bottom:.35rem}
+.hdr-title{font-size:1.6rem;font-weight:300;margin-bottom:.12rem}
+.hdr-title strong{font-weight:700}
+.hdr-sub{font-size:.8rem;opacity:.7}
+.hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:.5rem;flex-shrink:0}
+.hdr-actions{display:flex;gap:.4rem}
+.btn-hdr{padding:5px 12px;border:1px solid rgba(255,255,255,.35);border-radius:3px;background:transparent;color:var(--white);font-family:inherit;font-size:11px;cursor:pointer;transition:all .12s;opacity:.85}
+.btn-hdr:hover{opacity:1;background:rgba(255,255,255,.12)}
+.btn-hdr.primary{background:rgba(255,255,255,.18);opacity:1}
+.btn-hdr.primary:hover{background:rgba(255,255,255,.28)}
+
+/* SYNC BAR */
+.sync-bar{display:flex;align-items:center;gap:.85rem;padding:.55rem 2.5rem;border-bottom:1px solid var(--border);font-size:12px;flex-wrap:wrap}
+.sync-bar.hidden{display:none}
+.sync-status{display:flex;align-items:center;gap:5px;font-size:12px}
+.sync-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.s-ok .sync-dot{background:var(--ok)}.s-ok{color:var(--ok)}
+.s-loading .sync-dot{background:var(--warn);animation:pulse .8s infinite}.s-loading{color:var(--warn)}
+.s-error .sync-dot{background:var(--err)}.s-error{color:var(--err)}
+.s-none .sync-dot{background:var(--g4)}.s-none{color:var(--g3)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.sync-ts{color:var(--g3);font-size:11px}
+.sync-actions{display:flex;gap:.4rem;margin-left:auto}
+.btn-sync{padding:3px 11px;border:1px solid var(--border);border-radius:3px;background:var(--white);color:var(--g2);font-family:inherit;font-size:11px;cursor:pointer;transition:all .12s}
+.btn-sync:hover{border-color:var(--blue);color:var(--blue)}
+.btn-sync:disabled{opacity:.45;cursor:default}
+.btn-sync.push{background:var(--blue);border-color:var(--blue);color:var(--white)}
+.btn-sync.push:hover{background:var(--blue-d)}
+
+/* TOOLBAR */
+.toolbar{background:var(--g5);border-bottom:1px solid var(--border);padding:.75rem 2.5rem;display:flex;gap:.65rem;align-items:center;flex-wrap:wrap}
+.srch-wrap{position:relative;flex:1;min-width:160px;max-width:260px}
+.srch-wrap svg{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--g3);pointer-events:none}
+input[type=text],input[type=url],input[type=password]{font-family:inherit;font-size:13px;background:var(--white);border:1px solid var(--border);border-radius:3px;color:var(--black);outline:none;transition:border-color .15s}
+input:focus{border-color:var(--blue)}
+input::placeholder{color:var(--g4)}
+.srch{width:100%;padding:6px 9px 6px 28px}
+.filters{display:flex;gap:4px;flex-wrap:wrap}
+.fbtn{padding:4px 11px;border-radius:3px;border:1px solid var(--border);background:var(--white);color:var(--g2);font-family:inherit;font-size:12px;cursor:pointer;transition:all .12s;white-space:nowrap}
+.fbtn:hover{border-color:var(--blue);color:var(--blue)}
+.fbtn.on{background:var(--blue);border-color:var(--blue);color:var(--white)}
+
+/* STATS */
+.stats{padding:.55rem 2.5rem;border-bottom:1px solid var(--border);display:flex;gap:1.75rem;flex-wrap:wrap;align-items:center;background:var(--white)}
+.stat-item{display:flex;align-items:baseline;gap:4px}
+.snum{font-size:1.15rem;font-weight:700;color:var(--blue)}
+.slbl{font-size:11px;color:var(--g3)}
+.area-pills{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.apill{font-size:11px;padding:2px 7px;border-radius:3px;border:1px solid var(--blue-m);background:var(--blue-l);color:var(--blue-d)}
+
+/* GRID */
+.grid{padding:1.25rem 2.5rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:1px;background:var(--border)}
+.card{background:var(--white);padding:1rem 1.1rem;cursor:pointer;transition:background .1s;border-left:3px solid transparent}
+.card:hover{background:var(--blue-l)}
+.card.has-accent{border-left-color:var(--blue)}
+.ctop{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.5rem;gap:.5rem}
+.badge{font-size:11px;padding:2px 7px;border-radius:3px;border:1px solid var(--blue-m);background:var(--blue-l);color:var(--blue-d);white-space:nowrap;flex-shrink:0}
+.cyear{font-size:11px;color:var(--g3)}
+.cautor{font-size:11px;color:var(--g3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.2rem}
+.cobra{font-size:13px;font-weight:600;color:var(--black);line-height:1.4;margin-bottom:.45rem}
+.cobs{font-size:12px;color:var(--g2);border-top:1px solid var(--g5);padding-top:.4rem;line-height:1.45}
+.cfoot{display:flex;align-items:center;margin-top:.55rem;gap:5px}
+.dot{width:5px;height:5px;border-radius:50%}
+.dot-on{background:var(--blue)}.dot-off{background:var(--g4)}
+.crit-tag{font-size:10px;padding:1px 6px;border-radius:2px;margin-left:auto;border:1px solid var(--g4);color:var(--g3)}
+.crit-br{border-color:var(--blue-m);color:var(--blue)}
+
+/* MODAL BASE */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999;align-items:center;justify-content:center;padding:1.5rem}
+.overlay.open{display:flex}
+.modal{background:var(--white);border:1px solid var(--border);border-radius:4px;width:100%;max-width:620px;max-height:88vh;overflow-y:auto;box-shadow:0 8px 28px rgba(0,0,0,.1)}
+.mhdr{padding:1.1rem 1.4rem .9rem;border-bottom:1px solid var(--border);position:relative;border-top:3px solid var(--blue)}
+.mobra{font-size:1rem;font-weight:600;line-height:1.4;color:var(--black);padding-right:2.5rem;margin-bottom:.15rem}
+.mautor{font-size:11px;color:var(--g3);text-transform:uppercase;letter-spacing:.5px}
+.mclose{position:absolute;top:.85rem;right:1rem;background:transparent;border:1px solid var(--border);color:var(--g3);width:26px;height:26px;border-radius:3px;cursor:pointer;font-size:12px;transition:all .12s;display:flex;align-items:center;justify-content:center}
+.mclose:hover{border-color:var(--blue);color:var(--blue)}
+.mbody{padding:1.1rem 1.4rem}
+.mmeta{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:.9rem;align-items:center}
+.mobs{background:var(--g5);border-left:3px solid var(--blue);padding:.55rem .85rem;font-size:13px;color:var(--g1);margin-bottom:1rem;line-height:1.5}
+.flbl{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--g3);margin-bottom:4px}
+.flbl span{text-transform:none;letter-spacing:0;font-size:11px}
+.finput{display:block;width:100%;padding:7px 9px;margin-bottom:.9rem}
+.fta{display:block;width:100%;min-height:120px;padding:8px 9px;background:var(--white);border:1px solid var(--border);border-radius:3px;color:var(--black);font-family:inherit;font-size:13px;resize:vertical;line-height:1.6;outline:none;transition:border-color .15s}
+.fta:focus{border-color:var(--blue)}
+.mactions{display:flex;align-items:center;gap:.6rem;margin-top:.8rem;flex-wrap:wrap}
+.btn-save{padding:7px 18px;background:var(--blue);border:none;border-radius:3px;color:var(--white);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
+.btn-save:hover{background:var(--blue-d)}
+.btn-save:disabled{opacity:.5;cursor:default}
+.btn-open{padding:6px 12px;background:transparent;border:1px solid var(--border);border-radius:3px;color:var(--blue);font-family:inherit;font-size:12px;cursor:pointer;transition:all .12s;text-decoration:none;display:inline-flex;align-items:center;gap:4px}
+.btn-open:hover{border-color:var(--blue);background:var(--blue-l)}
+.msg-ok{font-size:12px;color:var(--blue);opacity:0;transition:opacity .3s}
+.msg-ok.show{opacity:1}
+
+/* SYNC CONFIG MODAL */
+.scfg-section{margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--g5)}
+.scfg-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.scfg-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--g2);margin-bottom:.65rem}
+.scfg-hint{font-size:12px;color:var(--g3);margin-bottom:.75rem;line-height:1.5}
+.scfg-hint a{color:var(--blue);text-decoration:none}
+.scfg-hint a:hover{text-decoration:underline}
+.scfg-input{display:block;width:100%;padding:7px 9px;margin-bottom:.5rem}
+.scfg-row{display:flex;gap:.5rem;align-items:flex-start}
+.scfg-row .scfg-input{margin-bottom:0;flex:1}
+.share-box{display:flex;gap:.4rem;align-items:center;background:var(--g5);border:1px solid var(--border);border-radius:3px;padding:.5rem .75rem;margin-top:.5rem}
+.share-url{font-size:12px;color:var(--g2);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:monospace}
+.btn-copy{padding:4px 11px;border:1px solid var(--border);border-radius:3px;background:var(--white);color:var(--g2);font-family:inherit;font-size:11px;cursor:pointer;transition:all .12s;white-space:nowrap;flex-shrink:0}
+.btn-copy:hover{border-color:var(--blue);color:var(--blue)}
+.status-banner{padding:.5rem .75rem;border-radius:3px;font-size:12px;margin-top:.6rem;display:none}
+.banner-ok{background:var(--ok-l);color:var(--ok);border:1px solid #a3d4b5;display:block}
+.banner-err{background:var(--err-l);color:var(--err);border:1px solid #f0b0b0;display:block}
+.banner-warn{background:var(--warn-l);color:var(--warn);border:1px solid #f0cfa0;display:block}
+
+/* SESSION NOTES */
+.sn-wrap{margin:1.25rem 2.5rem 2rem;border:1px solid var(--border);border-radius:4px;overflow:hidden}
+.sn-hdr{padding:.55rem 1rem;background:var(--g5);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.sn-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--g2)}
+.sn-btns{display:flex;gap:.4rem}
+.btn-sn{padding:3px 9px;border:1px solid var(--border);border-radius:3px;background:var(--white);color:var(--g2);font-family:inherit;font-size:11px;cursor:pointer;transition:all .12s}
+.btn-sn:hover{border-color:var(--blue);color:var(--blue)}
+.sn-ta{width:100%;min-height:150px;padding:.85rem 1rem;background:var(--white);border:none;color:var(--black);font-family:inherit;font-size:13px;line-height:1.65;resize:vertical;outline:none}
+.sn-ta::placeholder{color:var(--g4)}
+.empty{grid-column:1/-1;text-align:center;padding:3rem;color:var(--g4);font-size:13px}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-row">
+    <div>
+      <div class="hdr-sup">Seminário de Estudos</div>
+      <h1 class="hdr-title"><strong>Wagner</strong> — Referências &amp; Notas</h1>
+      <p class="hdr-sub">14 referências · filosofia, musicologia, crítica literária · notas coletivas por sessão</p>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-actions">
+        <button class="btn-hdr" onclick="exportText()">↓ Exportar texto</button>
+        <button class="btn-hdr primary" onclick="openSyncConfig()">⚙ Sincronização</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SYNC BAR -->
+<div class="sync-bar hidden" id="sync-bar">
+  <div class="sync-status s-none" id="sync-status">
+    <span class="sync-dot"></span>
+    <span id="sync-label">Não configurado</span>
+  </div>
+  <span class="sync-ts" id="sync-ts"></span>
+  <div class="sync-actions">
+    <button class="btn-sync" id="btn-pull" onclick="doPull()" disabled>↓ Atualizar do grupo</button>
+    <button class="btn-sync push" id="btn-push" onclick="doPush()" disabled>↑ Enviar para o grupo</button>
+  </div>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="srch-wrap">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input class="srch" type="text" placeholder="Autor, obra, observação…" id="srch">
+  </div>
+  <div class="filters" id="filters">
+    <button class="fbtn on" data-f="all">Todas</button>
+    <button class="fbtn" data-f="a:Filosofia">Filosofia</button>
+    <button class="fbtn" data-f="a:Literária">Literária</button>
+    <button class="fbtn" data-f="a:Musicologia">Musicologia</button>
+    <button class="fbtn" data-f="a:Técnica">Técnica</button>
+    <button class="fbtn" data-f="a:Brasil">Brasil</button>
+    <button class="fbtn" data-f="c:Internacional">Internacional</button>
+    <button class="fbtn" data-f="c:Brasileira">Brasileira</button>
+    <button class="fbtn" data-f="s:links">Com link</button>
+    <button class="fbtn" data-f="s:notas">Com notas</button>
+  </div>
+</div>
+
+<div class="stats" id="stats"></div>
+<div class="grid" id="grid"></div>
+
+<div class="sn-wrap">
+  <div class="sn-hdr">
+    <span class="sn-title">Notas da Sessão</span>
+  </div>
+  <textarea class="sn-ta" id="sn-ta" placeholder="Notas gerais da sessão de estudo — conexões entre obras, temas emergentes, perguntas para discussão, sínteses…"></textarea>
+</div>
+
+<!-- MODAL: Referência -->
+<div class="overlay" id="ov" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="mhdr">
+      <div class="mobra" id="m-obra"></div>
+      <div class="mautor" id="m-autor"></div>
+      <button class="mclose" onclick="closeModal()">✕</button>
+    </div>
+    <div class="mbody">
+      <div class="mmeta" id="m-meta"></div>
+      <div class="mobs" id="m-obs"></div>
+      <label class="flbl">Link <span>— artigo, PDF ou acesso online</span></label>
+      <input class="finput" type="url" id="m-link" placeholder="https://…">
+      <label class="flbl">Notas do grupo</label>
+      <textarea class="fta" id="m-notes" placeholder="Passagens relevantes, conexões, questões para discussão, citações…"></textarea>
+      <div class="mactions">
+        <button class="btn-save" id="btn-save">Salvar</button>
+        <a class="btn-open" id="btn-open" href="#" target="_blank" rel="noopener" style="display:none">↗ Abrir link</a>
+        <span class="msg-ok" id="msg-ok">✓ Salvo</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Sync Config -->
+<div class="overlay" id="ov-sync" onclick="if(event.target===this)closeSyncConfig()">
+  <div class="modal" style="max-width:540px">
+    <div class="mhdr">
+      <div class="mobra">Sincronização colaborativa</div>
+      <div class="mautor">Powered by JSONbin.io · gratuito para grupos pequenos</div>
+      <button class="mclose" onclick="closeSyncConfig()">✕</button>
+    </div>
+    <div class="mbody">
+
+      <!-- Seção 1: API Key -->
+      <div class="scfg-section">
+        <div class="scfg-title">1 · Sua chave de API</div>
+        <p class="scfg-hint">
+          Crie uma conta gratuita em <a href="https://jsonbin.io" target="_blank">jsonbin.io</a>,
+          acesse <strong>API Keys</strong> no menu e copie sua <strong>Master Key</strong>.
+          Ela fica salva só no seu navegador — nunca é compartilhada.
+        </p>
+        <input class="scfg-input" type="password" id="cfg-key" placeholder="$2b$10$…">
+        <div id="banner-key" class="status-banner"></div>
+      </div>
+
+      <!-- Seção 2: Bin compartilhado -->
+      <div class="scfg-section">
+        <div class="scfg-title">2 · Bin do grupo</div>
+        <p class="scfg-hint">
+          Se você é o <strong>primeiro do grupo</strong>, clique em "Criar bin" para gerar o espaço compartilhado.<br>
+          Se alguém já criou, cole o <strong>Bin ID</strong> que a pessoa compartilhou.
+        </p>
+        <div class="scfg-row">
+          <input class="scfg-input" type="text" id="cfg-bin" placeholder="Cole o Bin ID aqui…">
+          <button class="btn-sync" style="flex-shrink:0;padding:7px 13px" onclick="doCreateBin()">Criar bin</button>
+        </div>
+        <div id="banner-bin" class="status-banner"></div>
+      </div>
+
+      <!-- Seção 3: Link para compartilhar -->
+      <div class="scfg-section" id="share-section" style="display:none">
+        <div class="scfg-title">3 · Compartilhar com o grupo</div>
+        <p class="scfg-hint">
+          Envie este link para os colegas. Cada um precisará entrar com a
+          <strong>mesma Master Key</strong> (passo 1) para poder salvar edições.
+        </p>
+        <div class="share-box">
+          <span class="share-url" id="share-url"></span>
+          <button class="btn-copy" onclick="copyShareUrl()">Copiar</button>
+        </div>
+        <div id="banner-share" class="status-banner"></div>
+      </div>
+
+      <!-- Ações -->
+      <div style="display:flex;gap:.5rem;justify-content:flex-end;padding-top:.75rem;border-top:1px solid var(--g5)">
+        <button class="btn-sync" onclick="closeSyncConfig()">Fechar</button>
+        <button class="btn-save" onclick="saveSyncConfig()">Salvar configuração</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── DATA ── */
+const REFS=[
+  {id:'n1',autor:'Friedrich Nietzsche',obra:'O Nascimento da Tragédia (caps. 1–6)',ano:1872,area:'Filosofia',obs:'Seguro — não revela enredo',critica:'Internacional'},
+  {id:'n2',autor:'Friedrich Nietzsche',obra:'O Caso Wagner',ano:1888,area:'Filosofia',obs:'Par com Nascimento da Tragédia',critica:'Internacional'},
+  {id:'b1',autor:'Charles Baudelaire',obra:'Ensaio sobre Wagner',ano:1861,area:'Literária',obs:'Totalmente seguro — só efeitos',critica:'Internacional'},
+  {id:'m1',autor:'Thomas Mann',obra:'Sofrimentos e Grandeza de Richard Wagner',ano:1933,area:'Literária',obs:'Leitura seletiva recomendada',critica:'Internacional'},
+  {id:'mg1',autor:'Bryan Magee',obra:'The Tristan Chord: Wagner and Philosophy',ano:2000,area:'Filosofia',obs:'Melhor entrada para o grupo misto',critica:'Internacional'},
+  {id:'nt1',autor:'Jean-Jacques Nattiez',obra:'Wagner Androgyne',ano:1990,area:'Musicologia',obs:'Musical + literário + filosófico',critica:'Internacional'},
+  {id:'k1',autor:'Ernst Kurth',obra:'Romantische Harmonik und ihre Krise in Wagners Tristan',ano:1920,area:'Técnica',obs:'Texto fundador — em alemão',critica:'Internacional'},
+  {id:'d1',autor:'Carl Dahlhaus',obra:"Richard Wagner's Music Dramas",ano:1979,area:'Técnica',obs:'Acorde dentro da dramaturgia',critica:'Internacional'},
+  {id:'rb1',autor:'Robert Bailey',obra:'Prelude and Transfiguration from Tristan und Isolde (Norton Critical Scores)',ano:1985,area:'Técnica',obs:'Partitura anotada + ensaios',critica:'Internacional'},
+  {id:'f1',autor:'Allen Forte',obra:'The Harmonic Organization of The Rite of Spring',ano:1978,area:'Técnica',obs:'Perspectiva de Wagner a Schoenberg',critica:'Internacional'},
+  {id:'w1',autor:'José Miguel Wisnik',obra:'O Som e o Sentido (Companhia das Letras)',ano:1989,area:'Brasil',obs:'Wagner como crise do tonalismo; acessível e erudito',critica:'Brasileira'},
+  {id:'mm1',autor:'Lorenzo Mammì',obra:'A Fugitiva: Ensaios sobre Música (Companhia das Letras)',ano:2017,area:'Brasil',obs:'Inclui ensaios sobre Wagner e ópera',critica:'Brasileira'},
+  {id:'ne1',autor:'Arthur Nestrovski',obra:'Tudo Tem a Ver — Literatura e Música (Editora Todavia)',ano:2020,area:'Brasil',obs:'Debussy, Beethoven, cruzamento música-literatura',critica:'Brasileira'},
+  {id:'ne2',autor:'Arthur Nestrovski',obra:'Debussy e Poe (em Ironias da Modernidade)',ano:1997,area:'Brasil',obs:'Contexto simbolista, ressonâncias wagnerianas',critica:'Brasileira'},
+];
+
+/* ── LOCAL STATE ── */
+const LS_L='wgn-links',LS_N='wgn-notes',LS_S='wgn-session',LS_KEY='wgn-apikey',LS_BIN='wgn-binid';
+let links=JSON.parse(localStorage.getItem(LS_L)||'{}');
+let notes=JSON.parse(localStorage.getItem(LS_N)||'{}');
+let curRef=null,curFilter='all',curSearch='';
+
+function saveLocal(){
+  localStorage.setItem(LS_L,JSON.stringify(links));
+  localStorage.setItem(LS_N,JSON.stringify(notes));
+}
+
+/* ── JSONBIN API ── */
+const JB='https://api.jsonbin.io/v3/b';
+
+function jbHeaders(key,extra){
+  const h={'Content-Type':'application/json'};
+  if(key)h['X-Master-Key']=key;
+  return Object.assign(h,extra||{});
+}
+
+async function jbCreate(key,data){
+  const r=await fetch(JB,{method:'POST',headers:jbHeaders(key,{'X-Bin-Name':'Seminário Wagner','X-Bin-Private':'false'}),body:JSON.stringify(data)});
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||`HTTP ${r.status}`)}
+  return (await r.json()).metadata.id;
+}
+
+async function jbRead(binId,key){
+  const r=await fetch(`${JB}/${binId}/latest`,{headers:key?{'X-Master-Key':key}:{}});
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||`HTTP ${r.status}`)}
+  return (await r.json()).record;
+}
+
+async function jbWrite(binId,key,data){
+  const r=await fetch(`${JB}/${binId}`,{method:'PUT',headers:jbHeaders(key),body:JSON.stringify(data)});
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||`HTTP ${r.status}`)}
+  return await r.json();
+}
+
+/* ── SYNC STATE ── */
+let syncConfigured=false;
+
+function getSyncCfg(){
+  return{key:localStorage.getItem(LS_KEY)||'',binId:localStorage.getItem(LS_BIN)||''};
+}
+
+function setSyncStatus(state,label,ts){
+  const el=document.getElementById('sync-status');
+  const lb=document.getElementById('sync-label');
+  el.className='sync-status s-'+state;
+  lb.textContent=label;
+  if(ts)document.getElementById('sync-ts').textContent=ts;
+  else document.getElementById('sync-ts').textContent='';
+}
+
+function initSyncBar(){
+  const{key,binId}=getSyncCfg();
+  const bar=document.getElementById('sync-bar');
+  if(binId){
+    bar.classList.remove('hidden');
+    syncConfigured=true;
+    document.getElementById('btn-pull').disabled=false;
+    document.getElementById('btn-push').disabled=!key;
+    setSyncStatus('none','Pronto · '+(key?'leitura e escrita':'somente leitura'));
+  }else{
+    bar.classList.add('hidden');
+    syncConfigured=false;
+  }
+}
+
+function applyRemoteState(remote){
+  if(remote.links)Object.assign(links,remote.links);
+  if(remote.notes)Object.assign(notes,remote.notes);
+  if(remote.session){
+    const snt=document.getElementById('sn-ta');
+    snt.value=remote.session;
+    localStorage.setItem(LS_S,remote.session);
+  }
+  saveLocal();
+  renderStats();renderGrid();
+}
+
+async function doPull(){
+  const{key,binId}=getSyncCfg();
+  if(!binId)return;
+  const btn=document.getElementById('btn-pull');
+  btn.disabled=true;
+  setSyncStatus('loading','Carregando…');
+  try{
+    const remote=await jbRead(binId,key);
+    applyRemoteState(remote);
+    const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    setSyncStatus('ok','Sincronizado','Atualizado às '+now);
+  }catch(e){
+    setSyncStatus('error','Erro ao carregar: '+e.message);
+  }finally{btn.disabled=false}
+}
+
+async function doPush(){
+  const{key,binId}=getSyncCfg();
+  if(!binId||!key)return;
+  const btn=document.getElementById('btn-push');
+  btn.disabled=true;
+  setSyncStatus('loading','Enviando…');
+  try{
+    const snt=document.getElementById('sn-ta');
+    await jbWrite(binId,key,{links,notes,session:snt.value,ts:new Date().toISOString()});
+    const now=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    setSyncStatus('ok','Enviado com sucesso','Enviado às '+now);
+  }catch(e){
+    setSyncStatus('error','Erro ao enviar: '+e.message);
+  }finally{btn.disabled=false}
+}
+
+/* ── SYNC CONFIG MODAL ── */
+function openSyncConfig(){
+  const{key,binId}=getSyncCfg();
+  document.getElementById('cfg-key').value=key;
+  document.getElementById('cfg-bin').value=binId;
+  updateShareSection();
+  clearBanners();
+  document.getElementById('ov-sync').classList.add('open');
+}
+
+function closeSyncConfig(){document.getElementById('ov-sync').classList.remove('open')}
+
+function clearBanners(){
+  ['banner-key','banner-bin','banner-share'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.className='status-banner';el.textContent='';
+  });
+}
+
+function showBanner(id,type,msg){
+  const el=document.getElementById(id);
+  el.className='status-banner banner-'+type;
+  el.textContent=msg;
+}
+
+function updateShareSection(){
+  const binId=document.getElementById('cfg-bin').value.trim()||localStorage.getItem(LS_BIN)||'';
+  const sec=document.getElementById('share-section');
+  if(binId){
+    sec.style.display='block';
+    const url=location.href.split('#')[0]+'#bin='+binId;
+    document.getElementById('share-url').textContent=url;
+  }else{
+    sec.style.display='none';
+  }
+}
+
+async function doCreateBin(){
+  const key=document.getElementById('cfg-key').value.trim();
+  if(!key){showBanner('banner-key','err','Informe a Master Key primeiro (passo 1).');return;}
+  const btn=event.target;btn.disabled=true;btn.textContent='Criando…';
+  clearBanners();
+  try{
+    const snt=document.getElementById('sn-ta');
+    const binId=await jbCreate(key,{links,notes,session:snt.value,ts:new Date().toISOString()});
+    document.getElementById('cfg-bin').value=binId;
+    showBanner('banner-bin','ok','✓ Bin criado: '+binId+' — salve a configuração para ativar.');
+    updateShareSection();
+  }catch(e){
+    showBanner('banner-bin','err','Erro: '+e.message+'. Verifique a Master Key.');
+  }finally{btn.disabled=false;btn.textContent='Criar bin'}
+}
+
+function saveSyncConfig(){
+  const key=document.getElementById('cfg-key').value.trim();
+  const binId=document.getElementById('cfg-bin').value.trim();
+  clearBanners();
+  if(!binId){showBanner('banner-bin','warn','Informe ou crie um Bin ID antes de salvar.');return;}
+  localStorage.setItem(LS_KEY,key);
+  localStorage.setItem(LS_BIN,binId);
+  updateShareSection();
+  showBanner('banner-share','ok','✓ Configuração salva. Use os botões "Atualizar" e "Enviar" na barra de sincronização.');
+  initSyncBar();
+  setTimeout(()=>closeSyncConfig(),1800);
+}
+
+function copyShareUrl(){
+  const url=document.getElementById('share-url').textContent;
+  navigator.clipboard.writeText(url).then(()=>{
+    const btn=event.target;btn.textContent='Copiado!';
+    showBanner('banner-share','ok','Link copiado para a área de transferência.');
+    setTimeout(()=>btn.textContent='Copiar',2000);
+  });
+}
+
+/* ── CHECK URL HASH ── */
+function checkHash(){
+  const hash=location.hash;
+  if(hash.includes('bin=')){
+    const binId=hash.split('bin=')[1].split('&')[0];
+    if(binId&&!localStorage.getItem(LS_BIN)){
+      localStorage.setItem(LS_BIN,binId);
+      setTimeout(()=>{
+        openSyncConfig();
+        document.getElementById('cfg-bin').value=binId;
+        showBanner('banner-key','warn','Bin ID detectado no link. Informe sua Master Key para sincronizar.');
+        updateShareSection();
+      },400);
+    }
+  }
+}
+
+/* ── GRID / CARDS ── */
+function getFiltered(){
+  return REFS.filter(r=>{
+    const q=curSearch.toLowerCase();
+    const ok=!q||r.autor.toLowerCase().includes(q)||r.obra.toLowerCase().includes(q)||r.obs.toLowerCase().includes(q);
+    if(!ok)return false;
+    if(curFilter==='all')return true;
+    if(curFilter.startsWith('a:'))return r.area===curFilter.slice(2);
+    if(curFilter.startsWith('c:'))return r.critica===curFilter.slice(2);
+    if(curFilter==='s:links')return!!links[r.id];
+    if(curFilter==='s:notas')return!!(notes[r.id]&&notes[r.id].trim());
+    return true;
+  });
+}
+
+function renderStats(){
+  const nl=Object.values(links).filter(Boolean).length;
+  const nn=Object.values(notes).filter(v=>v&&v.trim()).length;
+  const areas={};REFS.forEach(r=>{areas[r.area]=(areas[r.area]||0)+1});
+  document.getElementById('stats').innerHTML=`
+    <div class="stat-item"><span class="snum">${REFS.length}</span><span class="slbl">referências</span></div>
+    <div class="stat-item"><span class="snum">${nl}</span><span class="slbl">com link</span></div>
+    <div class="stat-item"><span class="snum">${nn}</span><span class="slbl">anotadas</span></div>
+    <div class="area-pills">${Object.entries(areas).map(([a,n])=>`<span class="apill">${n}\u00a0${a.toLowerCase()}</span>`).join('')}</div>`;
+}
+
+function renderGrid(){
+  const g=document.getElementById('grid');
+  const list=getFiltered();
+  if(!list.length){g.innerHTML='<div class="empty">Nenhuma referência encontrada.</div>';return;}
+  g.innerHTML=list.map(r=>{
+    const hl=!!links[r.id],hn=!!(notes[r.id]&&notes[r.id].trim());
+    return `<div class="card${hl||hn?' has-accent':''}" onclick="openModal('${r.id}')">
+      <div class="ctop"><span class="badge">${r.area}</span><span class="cyear">${r.ano}</span></div>
+      <div class="cautor">${r.autor}</div>
+      <div class="cobra">${r.obra}</div>
+      <div class="cobs">${r.obs}</div>
+      <div class="cfoot">
+        <span class="dot ${hl?'dot-on':'dot-off'}" title="${hl?'Link salvo':'Sem link'}"></span>
+        <span class="dot ${hn?'dot-on':'dot-off'}" title="${hn?'Tem notas':'Sem notas'}"></span>
+        <span class="crit-tag ${r.critica==='Brasileira'?'crit-br':''}">${r.critica}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ── MODAL REF ── */
+function openModal(id){
+  const r=REFS.find(x=>x.id===id);if(!r)return;curRef=r;
+  document.getElementById('m-obra').textContent=r.obra;
+  document.getElementById('m-autor').textContent=r.autor;
+  document.getElementById('m-meta').innerHTML=`<span class="badge">${r.area}</span><span style="font-size:12px;color:var(--g3)">${r.ano}</span><span class="crit-tag ${r.critica==='Brasileira'?'crit-br':''}">${r.critica}</span>`;
+  document.getElementById('m-obs').textContent=r.obs;
+  const lv=links[r.id]||'';
+  document.getElementById('m-link').value=lv;
+  document.getElementById('m-notes').value=notes[r.id]||'';
+  const ba=document.getElementById('btn-open');
+  lv?(ba.href=lv,ba.style.display='inline-flex'):ba.style.display='none';
+  document.getElementById('msg-ok').classList.remove('show');
+  document.getElementById('ov').classList.add('open');
+}
+function closeModal(){document.getElementById('ov').classList.remove('open');curRef=null}
+
+document.getElementById('btn-save').addEventListener('click',()=>{
+  if(!curRef)return;
+  const lv=document.getElementById('m-link').value.trim();
+  links[curRef.id]=lv;notes[curRef.id]=document.getElementById('m-notes').value;
+  saveLocal();
+  const ba=document.getElementById('btn-open');
+  lv&&lv.startsWith('http')?(ba.href=lv,ba.style.display='inline-flex'):ba.style.display='none';
+  const msg=document.getElementById('msg-ok');
+  msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2000);
+  renderStats();renderGrid();
+});
+
+document.getElementById('m-link').addEventListener('input',()=>{
+  const lv=document.getElementById('m-link').value.trim();
+  const ba=document.getElementById('btn-open');
+  lv&&lv.startsWith('http')?(ba.href=lv,ba.style.display='inline-flex'):ba.style.display='none';
+});
+
+/* ── FILTERS / SEARCH ── */
+document.getElementById('filters').addEventListener('click',e=>{
+  const b=e.target.closest('.fbtn');if(!b)return;
+  curFilter=b.dataset.f;
+  document.querySelectorAll('.fbtn').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on');renderGrid();
+});
+document.getElementById('srch').addEventListener('input',e=>{curSearch=e.target.value.trim();renderGrid()});
+
+/* ── SESSION NOTES ── */
+const snt=document.getElementById('sn-ta');
+snt.value=localStorage.getItem(LS_S)||'';
+snt.addEventListener('input',()=>localStorage.setItem(LS_S,snt.value));
+
+/* ── EXPORT TEXT ── */
+function exportText(){
+  let t='SEMINÁRIO WAGNER — NOTAS\n'+'─'.repeat(36)+'\n';
+  t+=new Date().toLocaleDateString('pt-BR',{dateStyle:'full'})+'\n\n';
+  const sn=snt.value.trim();
+  if(sn)t+='NOTAS GERAIS\n'+'─'.repeat(20)+'\n'+sn+'\n\n';
+  const ann=REFS.filter(r=>notes[r.id]&&notes[r.id].trim());
+  if(ann.length){
+    t+='NOTAS POR REFERÊNCIA\n'+'─'.repeat(20)+'\n\n';
+    ann.forEach(r=>{
+      t+=`${r.autor}\n${r.obra} (${r.ano})\n`;
+      if(links[r.id])t+=`Link: ${links[r.id]}\n`;
+      t+='\n'+notes[r.id].trim()+'\n\n'+'─'.repeat(20)+'\n\n';
+    });
+  }
+  const a=Object.assign(document.createElement('a'),{
+    href:URL.createObjectURL(new Blob([t],{type:'text/plain;charset=utf-8'})),
+    download:'wagner-notas-'+new Date().toISOString().slice(0,10)+'.txt'
+  });a.click();
+}
+
+/* ── KEYBOARD ── */
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){closeModal();closeSyncConfig()}
+});
+
+/* ── BOOT ── */
+initSyncBar();
+renderStats();
+renderGrid();
+checkHash();
+
+// Auto-pull on load se configurado
+const{key:bootKey,binId:bootBin}=getSyncCfg();
+if(bootBin){doPull();}
+</script>
+</body>
+</html>
