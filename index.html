@@ -546,7 +546,7 @@ function getFiltered(){
 }
 function renderStats(){
   const nl=Object.values(links).filter(Boolean).length;
-  const nn=Object.values(notes).filter(v=>v&&v.trim()).length;
+  const nn=Object.values(notes).filter(v=>Array.isArray(v)?v.length>0:!!(v&&v.trim())).length;
   const total=allRefs().length;
   const areas={};allRefs().forEach(r=>{areas[r.area]=(areas[r.area]||0)+1});
   document.getElementById('stats').innerHTML=`
