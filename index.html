@@ -439,8 +439,9 @@ async function doPush(){
   document.getElementById('btn-push').disabled=true;
   setSyncStatus('loading','Enviando…');
   try{
-    const{data:remote,sha}=await ghRead();
-    currentSha=sha;
+    // Sempre busca o estado mais recente antes de escrever
+    const{data:remote,sha:freshSha}=await ghRead();
+    currentSha=freshSha;
 
     // Mescla links e notes
     const mergedLinks=Object.assign({},remote.links||{},links);
@@ -463,11 +464,13 @@ async function doPush(){
     const merged={links:mergedLinks,notes:mergedNotes,comments:mergedComments,customRefs:newRefs,ts:new Date().toISOString()};
     await ghWrite(merged,currentSha);
 
+    // Atualiza SHA após escrita bem-sucedida
+    const{sha:newSha}=await ghRead();
+    currentSha=newSha;
+
     links=mergedLinks;notes=mergedNotes;comments=mergedComments;customRefs=newRefs;
     saveLocal();renderStats();renderGrid();renderComments();
 
-    const{sha:newSha}=await ghRead();
-    currentSha=newSha;
     const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Enviado','Enviado às '+t);
   }catch(e){setSyncStatus('error','Erro ao enviar: '+e.message)}
