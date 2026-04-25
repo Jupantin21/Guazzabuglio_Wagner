@@ -394,22 +394,25 @@ function getState(){
   return{links,notes,session:document.getElementById('sn-ta').value,customRefs,ts:new Date().toISOString()};
 }
 function applyState(s){
-  if(s.links)Object.assign(links,s.links);
-  if(s.notes)Object.assign(notes,s.notes);
-  if(s.customRefs)customRefs=[...s.customRefs];
-  if(s.session){document.getElementById('sn-ta').value=s.session;localStorage.setItem(LS_S,s.session)}
+  if(s.links!==undefined)links=s.links;
+  if(s.notes!==undefined)notes=s.notes;
+  if(s.customRefs!==undefined)customRefs=s.customRefs;
+  const sn=document.getElementById('sn-ta');
+  if(s.session!==undefined){sn.value=s.session;localStorage.setItem(LS_S,s.session);}
   saveLocal();renderStats();renderGrid();
 }
 async function doPull(){
   document.getElementById('btn-pull').disabled=true;
-  setSyncStatus('loading','Carregando…');
+  setSyncStatus('loading','Carregando dados do grupo…');
   try{
     const{data,sha}=await ghRead();
     currentSha=sha;
     applyState(data);
     const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Sincronizado','Atualizado às '+t);
-  }catch(e){setSyncStatus('error','Erro: '+e.message)}
+  }catch(e){
+    setSyncStatus('error','Erro ao carregar: '+e.message);
+  }
   finally{document.getElementById('btn-pull').disabled=false}
 }
 async function doPush(){
