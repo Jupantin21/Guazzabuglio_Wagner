@@ -323,7 +323,7 @@ const AREA_CLASS={
 };
 
 /* ── LOCAL STATE ── */
-const FIXED_KEY='$2a$10$1pfebIrOSwyaVk72DC6RAeuiRijpVGHcRgnqJmyyKquc9vDb/PzvK';
+const FIXED_KEY='__JSONBIN_KEY__';
 const FIXED_BIN='69ecc83c856a6821896fe58d';
 const LS_L='wgn-links',LS_N='wgn-notes',LS_S='wgn-session',LS_CR='wgn-custom',LS_KEY='wgn-apikey',LS_BIN='wgn-binid';
 let links=JSON.parse(localStorage.getItem(LS_L)||'{}');
@@ -339,26 +339,45 @@ function saveLocal(){
   localStorage.setItem(LS_CR,JSON.stringify(customRefs));
 }
 
-/* ── JSONBIN ── */
-const JB='https://api.jsonbin.io/v3/b';
-function jbH(key,extra){const h={'Content-Type':'application/json'};if(key)h['X-Master-Key']=key;return Object.assign(h,extra||{})}
-async function jbCreate(key,data){
-  const r=await fetch(JB,{method:'POST',headers:jbH(key,{'X-Bin-Name':'Wagner Tristão e Isolda','X-Bin-Private':'false'}),body:JSON.stringify(data)});
-  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||`HTTP ${r.status}`)}
-  return (await r.json()).metadata.id;
+/* ── GITHUB API ── */
+const GH_REPO='jupantin21/Guazzabuglio_Wagner';
+const GH_FILE='dados.json';
+const GH_TOKEN='__GITHUB_TOKEN__';
+const GH_API=`https://api.github.com/repos/${GH_REPO}/contents/${GH_FILE}`;
+
+function ghHeaders(){
+  return{
+    'Authorization':'token '+GH_TOKEN,
+    'Accept':'application/vnd.github.v3+json',
+    'Content-Type':'application/json'
+  };
 }
-async function jbRead(binId,key){
-  const r=await fetch(`${JB}/${binId}/latest`,{headers:key?{'X-Master-Key':key}:{}});
-  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||`HTTP ${r.status}`)}
-  return (await r.json()).record;
+
+async function ghRead(){
+  const r=await fetch(GH_API,{headers:ghHeaders()});
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  const j=await r.json();
+  const text=decodeURIComponent(escape(atob(j.content.replace(/\n/g,''))));
+  return{data:JSON.parse(text),sha:j.sha};
 }
-async function jbWrite(binId,key,data){
-  const r=await fetch(`${JB}/${binId}`,{method:'PUT',headers:jbH(key),body:JSON.stringify(data)});
-  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||`HTTP ${r.status}`)}
+
+async function ghWrite(data,sha){
+  const content=btoa(unescape(encodeURIComponent(JSON.stringify(data,null,2))));
+  const r=await fetch(GH_API,{
+    method:'PUT',
+    headers:ghHeaders(),
+    body:JSON.stringify({
+      message:'Atualização de notas — '+new Date().toLocaleString('pt-BR'),
+      content,
+      sha
+    })
+  });
+  if(!r.ok){const e=await r.json().catch(()=>({}));throw new Error(e.message||'HTTP '+r.status)}
 }
 
 /* ── SYNC ── */
-function getSyncCfg(){return{key:FIXED_KEY,binId:FIXED_BIN}}
+let currentSha=null;
+
 function setSyncStatus(state,label,ts){
   const el=document.getElementById('sync-status');
   el.className='sync-status s-'+state;
@@ -371,7 +390,9 @@ function initSyncBar(){
   document.getElementById('btn-push').disabled=false;
   setSyncStatus('none','Pronto');
 }
-function getState(){return{links,notes,session:document.getElementById('sn-ta').value,customRefs,ts:new Date().toISOString()}}
+function getState(){
+  return{links,notes,session:document.getElementById('sn-ta').value,customRefs,ts:new Date().toISOString()};
+}
 function applyState(s){
   if(s.links)Object.assign(links,s.links);
   if(s.notes)Object.assign(notes,s.notes);
@@ -380,37 +401,33 @@ function applyState(s){
   saveLocal();renderStats();renderGrid();
 }
 async function doPull(){
-  const{key,binId}=getSyncCfg();if(!binId)return;
   document.getElementById('btn-pull').disabled=true;
   setSyncStatus('loading','Carregando…');
   try{
-    applyState(await jbRead(binId,key));
+    const{data,sha}=await ghRead();
+    currentSha=sha;
+    applyState(data);
     const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Sincronizado','Atualizado às '+t);
   }catch(e){setSyncStatus('error','Erro: '+e.message)}
   finally{document.getElementById('btn-pull').disabled=false}
 }
 async function doPush(){
-  const{key,binId}=getSyncCfg();if(!binId||!key)return;
   document.getElementById('btn-push').disabled=true;
   setSyncStatus('loading','Enviando…');
   try{
-    await jbWrite(binId,key,getState());
+    if(!currentSha){
+      const{sha}=await ghRead();
+      currentSha=sha;
+    }
+    await ghWrite(getState(),currentSha);
+    const{sha}=await ghRead();
+    currentSha=sha;
     const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Enviado','Enviado às '+t);
   }catch(e){setSyncStatus('error','Erro: '+e.message)}
   finally{document.getElementById('btn-push').disabled=false}
 }
-
-/* ── SYNC CONFIG MODAL ── */
-function openSyncConfig(){}
-function closeSyncConfig(){}
-function clearBanners(){}
-function showBanner(){}
-function updateShareSection(){}
-function doCreateBin(){}
-function saveSyncConfig(){}
-function copyShareUrl(){}
 
 /* ── ADD REFERENCE ── */
 function openAddRef(){
