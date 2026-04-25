@@ -419,16 +419,55 @@ async function doPush(){
   document.getElementById('btn-push').disabled=true;
   setSyncStatus('loading','Enviando…');
   try{
-    if(!currentSha){
-      const{sha}=await ghRead();
-      currentSha=sha;
-    }
-    await ghWrite(getState(),currentSha);
-    const{sha}=await ghRead();
+    // Busca estado atual do servidor para mesclar
+    const{data:remote,sha}=await ghRead();
     currentSha=sha;
+
+    // Mescla links: mantém todos, novo prevalece em caso de conflito
+    const mergedLinks=Object.assign({},remote.links||{},links);
+
+    // Mescla notes: mantém todos, novo prevalece em caso de conflito
+    const mergedNotes=Object.assign({},remote.notes||{},notes);
+
+    // Mescla customRefs: mantém todos os IDs únicos
+    const existingIds=new Set((remote.customRefs||[]).map(r=>r.id));
+    const newRefs=[...(remote.customRefs||[]),...customRefs.filter(r=>!existingIds.has(r.id))];
+
+    // Comentários: acumula — nunca substitui, só adiciona ao final
+    const localSession=document.getElementById('sn-ta').value.trim();
+    const remoteSession=(remote.session||'').trim();
+    let mergedSession=remoteSession;
+    if(localSession&&localSession!==remoteSession){
+      const ts=new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
+      const separator=remoteSession?'\n\n────────────────── '+ts+'\n':'';
+      mergedSession=remoteSession+separator+localSession;
+    }
+
+    const merged={
+      links:mergedLinks,
+      notes:mergedNotes,
+      session:mergedSession,
+      customRefs:newRefs,
+      ts:new Date().toISOString()
+    };
+
+    await ghWrite(merged,currentSha);
+
+    // Atualiza estado local com o merged
+    links=mergedLinks;
+    notes=mergedNotes;
+    customRefs=newRefs;
+    document.getElementById('sn-ta').value=mergedSession;
+    localStorage.setItem(LS_S,mergedSession);
+    saveLocal();renderStats();renderGrid();
+
+    // Pega SHA atualizado
+    const{sha:newSha}=await ghRead();
+    currentSha=newSha;
+
     const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Enviado','Enviado às '+t);
-  }catch(e){setSyncStatus('error','Erro: '+e.message)}
+  }catch(e){setSyncStatus('error','Erro ao enviar: '+e.message)}
   finally{document.getElementById('btn-push').disabled=false}
 }
 
