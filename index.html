@@ -142,14 +142,24 @@ input::placeholder,textarea::placeholder{color:var(--g4)}
 .banner-err{background:var(--err-l);color:var(--err);border:1px solid #f0b0b0;display:block}
 .banner-warn{background:var(--warn-l);color:var(--warn);border:1px solid #f0cfa0;display:block}
 
-/* COMMENTS / IMPRESSÕES */
+/* COMMENTS */
 .sn-wrap{margin:1.25rem 2.5rem 2rem;border:1px solid var(--border);border-radius:4px;overflow:hidden}
 .sn-hdr{padding:.55rem 1rem;background:var(--g5);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
 .sn-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--g2)}
 .btn-sn{padding:3px 9px;border:1px solid var(--border);border-radius:3px;background:var(--white);color:var(--g2);font-family:inherit;font-size:11px;cursor:pointer;transition:all .12s}
 .btn-sn:hover{border-color:var(--blue);color:var(--blue)}
-.sn-ta{width:100%;min-height:150px;padding:.85rem 1rem;background:var(--white);border:none;color:var(--black);font-family:inherit;font-size:13px;line-height:1.65;resize:vertical;outline:none}
+.comments-list{padding:.75rem 1.1rem;display:flex;flex-direction:column;gap:.75rem}
+.comments-list:empty{display:none}
+.comment-block{border:1px solid var(--border);border-radius:3px;overflow:hidden}
+.comment-meta{padding:.35rem .75rem;background:var(--g5);border-bottom:1px solid var(--border);font-size:11px;color:var(--g3);display:flex;gap:.75rem}
+.comment-meta strong{color:var(--g2)}
+.comment-body{padding:.65rem .75rem;font-size:13px;color:var(--g1);line-height:1.65;white-space:pre-wrap;background:var(--white)}
+.comment-new{border-top:1px solid var(--border)}
+.comment-new-footer{padding:.4rem 1rem .5rem;background:var(--g5);border-top:1px solid var(--border)}
+.comment-hint{font-size:11px;color:var(--g3)}
+.sn-ta{width:100%;min-height:100px;padding:.85rem 1rem;background:var(--white);border:none;color:var(--black);font-family:inherit;font-size:13px;line-height:1.65;resize:vertical;outline:none}
 .sn-ta::placeholder{color:var(--g4)}
+.no-comments{padding:1rem 1.1rem;font-size:12px;color:var(--g4);font-style:italic}
 
 /* EMPTY */
 .empty{grid-column:1/-1;text-align:center;padding:3rem;color:var(--g4);font-size:13px}
@@ -216,7 +226,13 @@ input::placeholder,textarea::placeholder{color:var(--g4)}
     <span class="sn-title">Comentários &amp; Impressões</span>
     <button class="btn-sn" onclick="exportText()">Exportar texto</button>
   </div>
-  <textarea class="sn-ta" id="sn-ta" placeholder="Comentários gerais, impressões da sessão, conexões entre obras, temas emergentes, perguntas para discussão…"></textarea>
+  <div id="comments-list"></div>
+  <div class="comment-new">
+    <textarea class="sn-ta" id="sn-ta" placeholder="Escreva seu comentário aqui. Após enviar ao grupo, não poderá ser editado."></textarea>
+    <div class="comment-new-footer">
+      <span class="comment-hint">↑ Use "Enviar para o grupo" na barra acima para publicar</span>
+    </div>
+  </div>
 </div>
 
 <!-- MODAL: Referência -->
@@ -391,15 +407,19 @@ function initSyncBar(){
   setSyncStatus('none','Pronto');
 }
 function getState(){
-  return{links,notes,session:document.getElementById('sn-ta').value,customRefs,ts:new Date().toISOString()};
+  return{links,notes,comments,customRefs,ts:new Date().toISOString()};
 }
 function applyState(s){
   if(s.links!==undefined)links=s.links;
   if(s.notes!==undefined)notes=s.notes;
   if(s.customRefs!==undefined)customRefs=s.customRefs;
-  const sn=document.getElementById('sn-ta');
-  if(s.session!==undefined){sn.value=s.session;localStorage.setItem(LS_S,s.session);}
-  saveLocal();renderStats();renderGrid();
+  // Migra formato antigo (session string) para array de comments
+  if(s.comments!==undefined){
+    comments=s.comments;
+  } else if(s.session){
+    comments=[{text:s.session,ts:s.ts||new Date().toISOString()}];
+  }
+  saveLocal();renderStats();renderGrid();renderComments();
 }
 async function doPull(){
   document.getElementById('btn-pull').disabled=true;
@@ -419,52 +439,35 @@ async function doPush(){
   document.getElementById('btn-push').disabled=true;
   setSyncStatus('loading','Enviando…');
   try{
-    // Busca estado atual do servidor para mesclar
     const{data:remote,sha}=await ghRead();
     currentSha=sha;
 
-    // Mescla links: mantém todos, novo prevalece em caso de conflito
+    // Mescla links e notes
     const mergedLinks=Object.assign({},remote.links||{},links);
-
-    // Mescla notes: mantém todos, novo prevalece em caso de conflito
     const mergedNotes=Object.assign({},remote.notes||{},notes);
 
-    // Mescla customRefs: mantém todos os IDs únicos
+    // Mescla customRefs
     const existingIds=new Set((remote.customRefs||[]).map(r=>r.id));
     const newRefs=[...(remote.customRefs||[]),...customRefs.filter(r=>!existingIds.has(r.id))];
 
-    // Comentários: acumula — nunca substitui, só adiciona ao final
-    const localSession=document.getElementById('sn-ta').value.trim();
-    const remoteSession=(remote.session||'').trim();
-    let mergedSession=remoteSession;
-    if(localSession&&localSession!==remoteSession){
-      const ts=new Date().toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
-      const separator=remoteSession?'\n\n────────────────── '+ts+'\n':'';
-      mergedSession=remoteSession+separator+localSession;
+    // Comentários: acumula — adiciona novo ao array existente
+    const remoteComments=remote.comments||[];
+    const newText=snt.value.trim();
+    let mergedComments=[...remoteComments];
+    if(newText){
+      mergedComments.push({text:newText,ts:new Date().toISOString()});
+      snt.value='';
+      localStorage.removeItem(LS_S);
     }
 
-    const merged={
-      links:mergedLinks,
-      notes:mergedNotes,
-      session:mergedSession,
-      customRefs:newRefs,
-      ts:new Date().toISOString()
-    };
-
+    const merged={links:mergedLinks,notes:mergedNotes,comments:mergedComments,customRefs:newRefs,ts:new Date().toISOString()};
     await ghWrite(merged,currentSha);
 
-    // Atualiza estado local com o merged
-    links=mergedLinks;
-    notes=mergedNotes;
-    customRefs=newRefs;
-    document.getElementById('sn-ta').value=mergedSession;
-    localStorage.setItem(LS_S,mergedSession);
-    saveLocal();renderStats();renderGrid();
+    links=mergedLinks;notes=mergedNotes;comments=mergedComments;customRefs=newRefs;
+    saveLocal();renderStats();renderGrid();renderComments();
 
-    // Pega SHA atualizado
     const{sha:newSha}=await ghRead();
     currentSha=newSha;
-
     const t=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
     setSyncStatus('ok','Enviado','Enviado às '+t);
   }catch(e){setSyncStatus('error','Erro ao enviar: '+e.message)}
@@ -604,17 +607,43 @@ document.getElementById('filters').addEventListener('click',e=>{
 });
 document.getElementById('srch').addEventListener('input',e=>{curSearch=e.target.value.trim();renderGrid()});
 
-/* ── COMENTÁRIOS / IMPRESSÕES ── */
+/* ── COMENTÁRIOS (append-only) ── */
+// comments é array de {text, ts} — armazenado em lugar de session
+let comments=[];
+
 const snt=document.getElementById('sn-ta');
-snt.value=localStorage.getItem(LS_S)||'';
 snt.addEventListener('input',()=>localStorage.setItem(LS_S,snt.value));
+
+function renderComments(){
+  const el=document.getElementById('comments-list');
+  if(!comments.length){
+    el.innerHTML='<div class="no-comments">Nenhum comentário ainda. Escreva abaixo e envie ao grupo.</div>';
+    return;
+  }
+  el.className='comments-list';
+  el.innerHTML=comments.map((c,i)=>{
+    const d=new Date(c.ts);
+    const dateStr=d.toLocaleDateString('pt-BR',{dateStyle:'short'});
+    const timeStr=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="comment-block">
+      <div class="comment-meta"><strong>#${i+1}</strong><span>${dateStr} às ${timeStr}</span></div>
+      <div class="comment-body">${c.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+    </div>`;
+  }).join('');
+}
 
 /* ── EXPORT ── */
 function exportText(){
   let t='WAGNER — PREPARAÇÃO PARA TRISTÃO E ISOLDA\n'+'─'.repeat(36)+'\n';
   t+=new Date().toLocaleDateString('pt-BR',{dateStyle:'full'})+'\n\n';
-  const sn=snt.value.trim();
-  if(sn)t+='COMENTÁRIOS & IMPRESSÕES\n'+'─'.repeat(20)+'\n'+sn+'\n\n';
+  if(comments.length){
+    t+='COMENTÁRIOS & IMPRESSÕES\n'+'─'.repeat(20)+'\n\n';
+    comments.forEach((c,i)=>{
+      const d=new Date(c.ts);
+      t+=`#${i+1} — ${d.toLocaleDateString('pt-BR')} às ${d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}\n`;
+      t+=c.text+'\n\n'+'─'.repeat(20)+'\n\n';
+    });
+  }
   const ann=allRefs().filter(r=>notes[r.id]&&notes[r.id].trim());
   if(ann.length){
     t+='NOTAS POR REFERÊNCIA\n'+'─'.repeat(20)+'\n\n';
@@ -634,7 +663,7 @@ function exportText(){
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeAddRef()}});
 
 /* ── BOOT ── */
-initSyncBar();renderStats();renderGrid();doPull();
+initSyncBar();renderStats();renderGrid();renderComments();doPull();
 </script>
 </body>
 </html>
