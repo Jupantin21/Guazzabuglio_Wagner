@@ -163,6 +163,13 @@ input::placeholder,textarea::placeholder{color:var(--g4)}
 
 /* EMPTY */
 .empty{grid-column:1/-1;text-align:center;padding:3rem;color:var(--g4);font-size:13px}
+.ref-thread{display:flex;flex-direction:column;gap:.5rem;margin-bottom:.75rem}
+.ref-thread:empty::before{content:'Nenhum comentário ainda.';font-size:12px;color:var(--g4);font-style:italic;display:block;padding:.4rem 0}
+.ref-comment{border:1px solid var(--border);border-radius:3px;overflow:hidden}
+.ref-comment-meta{padding:.3rem .7rem;background:var(--g5);border-bottom:1px solid var(--border);font-size:11px;color:var(--g3);display:flex;gap:.65rem}
+.ref-comment-meta strong{color:var(--g2)}
+.ref-comment-body{padding:.55rem .7rem;font-size:13px;color:var(--g1);line-height:1.6;white-space:pre-wrap;background:var(--white)}
+.ref-new-comment{border-top:1px solid var(--border);padding-top:.85rem}
 
 /* ADD REF FORM */
 .add-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem .9rem}
@@ -246,14 +253,23 @@ input::placeholder,textarea::placeholder{color:var(--g4)}
     <div class="mbody">
       <div class="mmeta" id="m-meta"></div>
       <div class="mobs" id="m-obs"></div>
+
       <label class="flbl">Link <span>— artigo, PDF ou acesso online</span></label>
       <input class="finput" type="url" id="m-link" placeholder="https://…">
-      <label class="flbl">Notas do grupo</label>
-      <textarea class="fta" id="m-notes" placeholder="Passagens relevantes, conexões, questões para discussão, citações…"></textarea>
-      <div class="mactions">
-        <button class="btn-save" id="btn-save">Salvar</button>
+      <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:1rem">
+        <button class="btn-save" id="btn-save-link">Salvar link</button>
         <a class="btn-open" id="btn-open" href="#" target="_blank" rel="noopener" style="display:none">↗ Abrir link</a>
-        <span class="msg-ok" id="msg-ok">✓ Salvo</span>
+        <span class="msg-ok" id="msg-link-ok">✓ Salvo</span>
+      </div>
+
+      <label class="flbl">Discussão <span>— comentários do grupo sobre esta referência</span></label>
+      <div id="m-thread" class="ref-thread"></div>
+      <div class="ref-new-comment">
+        <textarea class="fta" id="m-new-comment" placeholder="Escreva seu comentário sobre esta referência. Após enviar, não poderá ser editado." style="min-height:80px"></textarea>
+        <div style="display:flex;align-items:center;gap:.6rem;margin-top:.6rem">
+          <button class="btn-save" id="btn-save-comment">Publicar comentário</button>
+          <span class="msg-ok" id="msg-comment-ok">✓ Publicado</span>
+        </div>
       </div>
     </div>
   </div>
@@ -524,7 +540,7 @@ function getFiltered(){
     if(curFilter==='all')return true;
     if(curFilter.startsWith('a:'))return r.area===curFilter.slice(2);
     if(curFilter==='s:links')return!!links[r.id];
-    if(curFilter==='s:notas')return!!(notes[r.id]&&notes[r.id].trim());
+    if(curFilter==='s:notas')return Array.isArray(notes[r.id])?notes[r.id].length>0:!!(notes[r.id]&&notes[r.id].trim());
     return true;
   });
 }
@@ -544,7 +560,7 @@ function renderGrid(){
   const list=getFiltered();
   if(!list.length){g.innerHTML='<div class="empty">Nenhuma referência encontrada.</div>';return;}
   g.innerHTML=list.map(r=>{
-    const hl=!!links[r.id],hn=!!(notes[r.id]&&notes[r.id].trim());
+    const hl=!!links[r.id],hn=Array.isArray(notes[r.id])?notes[r.id].length>0:!!(notes[r.id]&&notes[r.id].trim());
     const bc=AREA_CLASS[r.area]||'badge-fil';
     const isCustom=!!r.custom;
     return `<div class="card${hl||hn?' has-accent':''}${isCustom?' card-custom':''}" onclick="openModal('${r.id}')">
@@ -566,6 +582,20 @@ function renderGrid(){
 }
 
 /* ── MODAL REF ── */
+function renderThread(id){
+  const thread=Array.isArray(notes[id])?notes[id]:[];
+  const el=document.getElementById('m-thread');
+  el.innerHTML=thread.map((c,i)=>{
+    const d=new Date(c.ts);
+    const ds=d.toLocaleDateString('pt-BR',{dateStyle:'short'});
+    const ts=d.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="ref-comment">
+      <div class="ref-comment-meta"><strong>#${i+1}</strong><span>${ds} às ${ts}</span></div>
+      <div class="ref-comment-body">${c.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+    </div>`;
+  }).join('');
+}
+
 function openModal(id){
   const r=allRefs().find(x=>x.id===id);if(!r)return;curRef=r;
   document.getElementById('m-obra').textContent=r.obra;
@@ -576,29 +606,49 @@ function openModal(id){
   if(r.obs){obsEl.textContent=r.obs;obsEl.style.display='block'}else obsEl.style.display='none';
   const lv=links[r.id]||'';
   document.getElementById('m-link').value=lv;
-  document.getElementById('m-notes').value=notes[r.id]||'';
   const ba=document.getElementById('btn-open');
   lv?(ba.href=lv,ba.style.display='inline-flex'):ba.style.display='none';
-  document.getElementById('msg-ok').classList.remove('show');
+  document.getElementById('m-new-comment').value='';
+  document.getElementById('msg-link-ok').classList.remove('show');
+  document.getElementById('msg-comment-ok').classList.remove('show');
+  renderThread(r.id);
   document.getElementById('ov').classList.add('open');
 }
 function closeModal(){document.getElementById('ov').classList.remove('open');curRef=null}
 
-document.getElementById('btn-save').addEventListener('click',()=>{
+// Salvar link
+document.getElementById('btn-save-link').addEventListener('click',()=>{
   if(!curRef)return;
   const lv=document.getElementById('m-link').value.trim();
-  links[curRef.id]=lv;notes[curRef.id]=document.getElementById('m-notes').value;
+  links[curRef.id]=lv;
   saveLocal();
   const ba=document.getElementById('btn-open');
   lv&&lv.startsWith('http')?(ba.href=lv,ba.style.display='inline-flex'):ba.style.display='none';
-  const msg=document.getElementById('msg-ok');
+  const msg=document.getElementById('msg-link-ok');
   msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2000);
   renderStats();renderGrid();
 });
+
 document.getElementById('m-link').addEventListener('input',()=>{
   const lv=document.getElementById('m-link').value.trim();
   const ba=document.getElementById('btn-open');
   lv&&lv.startsWith('http')?(ba.href=lv,ba.style.display='inline-flex'):ba.style.display='none';
+});
+
+// Publicar comentário na referência
+document.getElementById('btn-save-comment').addEventListener('click',()=>{
+  if(!curRef)return;
+  const txt=document.getElementById('m-new-comment').value.trim();
+  if(!txt)return;
+  const thread=Array.isArray(notes[curRef.id])?[...notes[curRef.id]]:[];
+  thread.push({text:txt,ts:new Date().toISOString()});
+  notes[curRef.id]=thread;
+  saveLocal();
+  document.getElementById('m-new-comment').value='';
+  renderThread(curRef.id);
+  const msg=document.getElementById('msg-comment-ok');
+  msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2000);
+  renderStats();renderGrid();
 });
 
 /* ── FILTERS / SEARCH ── */
@@ -611,10 +661,11 @@ document.getElementById('filters').addEventListener('click',e=>{
 document.getElementById('srch').addEventListener('input',e=>{curSearch=e.target.value.trim();renderGrid()});
 
 /* ── COMENTÁRIOS (append-only) ── */
-// comments é array de {text, ts} — armazenado em lugar de session
 let comments=[];
 
 const snt=document.getElementById('sn-ta');
+// Textarea sempre começa vazia — é só para redigir novo comentário
+localStorage.removeItem(LS_S);
 snt.addEventListener('input',()=>localStorage.setItem(LS_S,snt.value));
 
 function renderComments(){
@@ -647,13 +698,19 @@ function exportText(){
       t+=c.text+'\n\n'+'─'.repeat(20)+'\n\n';
     });
   }
-  const ann=allRefs().filter(r=>notes[r.id]&&notes[r.id].trim());
+  const ann=allRefs().filter(r=>Array.isArray(notes[r.id])?notes[r.id].length>0:!!(notes[r.id]&&notes[r.id].trim()));
   if(ann.length){
-    t+='NOTAS POR REFERÊNCIA\n'+'─'.repeat(20)+'\n\n';
+    t+='COMENTÁRIOS POR REFERÊNCIA\n'+'─'.repeat(20)+'\n\n';
     ann.forEach(r=>{
       t+=`${r.autor}\n${r.obra}${r.ano?' ('+r.ano+')':''}\n`;
       if(links[r.id])t+=`Link: ${links[r.id]}\n`;
-      t+='\n'+notes[r.id].trim()+'\n\n'+'─'.repeat(20)+'\n\n';
+      t+='\n';
+      const thread=Array.isArray(notes[r.id])?notes[r.id]:[{text:notes[r.id],ts:''}];
+      thread.forEach((c,i)=>{
+        const d=c.ts?new Date(c.ts).toLocaleString('pt-BR'):'';
+        t+=`  #${i+1}${d?' — '+d:''}\n  ${c.text}\n\n`;
+      });
+      t+='─'.repeat(20)+'\n\n';
     });
   }
   const a=Object.assign(document.createElement('a'),{
