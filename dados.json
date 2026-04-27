@@ -25,7 +25,31 @@
     "b1": "",
     "n2": "TesteNick123\nTeste Julia"
   },
-  "comments": [],
-  "customRefs": [],
-  "ts": "2026-04-27T14:40:53.447Z"
+  "comments": [
+    {
+      "text": "> Entrada preferida Ju:  modernidade x mito : o que Wagner representa no contexto da historicidade eurpoeia/alemã na virada do sec XVIII para o sec. XIX",
+      "ts": "2026-04-27T14:52:16.915Z"
+    }
+  ],
+  "customRefs": [
+    {
+      "id": "custom-1777301378374",
+      "autor": "Goethe",
+      "obra": "O Fausto",
+      "ano": null,
+      "area": "Crítica Literária",
+      "obs": "Para compreender contexto alemão",
+      "custom": true
+    },
+    {
+      "id": "custom-1777301406636",
+      "autor": "Thomas Mann",
+      "obra": "Dr. Fausto",
+      "ano": null,
+      "area": "Crítica Literária",
+      "obs": "Para compreender contexto alemão",
+      "custom": true
+    }
+  ],
+  "ts": "2026-04-27T14:52:16.916Z"
 }
