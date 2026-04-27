@@ -12,11 +12,20 @@
         "ts": "2026-04-25T15:58:12.882Z"
       }
     ],
-    "n1": "",
+    "n1": [
+      {
+        "text": "Em o Nascimento da Tragédia, Nietzsche define a arte enquanto representação metafísica do mundo e elabora sobre o princípio Apolíneo e Dionisíaco das artes. Apolo representa a vontade de conhecimento, o indivíduo procurando a justa medida de si mesmo (sonho, oráculo); o dionisíaco é o transbordamento do eu, o que parte de si para entregar-se ao oceânico do mundo. A tragédia grega, com eurípedes, unifica de maneira exemplar esses dois princípios: o coro representa o transbordamento dionisíaco enquanto o mito do herói constroi uma vontade de conhecimento. A partir de Platão, porém, a vontade de conhecimento teria prevalescido sobre o querer, levando à interpretação do mundo mais do que a dissolução do indíviduo nesse princípio metafísico: sem mitos, prevaslece o pessimismo. A ópera wagneriana ressurge como uma tentativa de atualização (metempsicose) do mito, unificando o dionisíaco e apolíneo em uma transfiguração do mito.",
+        "ts": "2026-04-27T14:07:51.997Z"
+      },
+      {
+        "text": "1. Princípios Apolíneo x Dionisíaco: representação x vontade: conhecimento de si x esquecimento de si\n\"Essa jubilosa necessidade da experiência do sonho foi igualmente expressa pelos gregos em seu Apolo: sendo o Deus das forças plasmadoras, ele é ao mesmo tempo, o deus profético. Como divindade da luz - o \"resplandescente\", conforme a raiz do nome - ele também governa a bela aparência do mundo interior de fantasia. A verdade superior, a perfeição desses estados em oposição à realidade cotidiana inteligível de forma lacunar, e a  profunda consciência da natureza que cura e ajuda no sono e nos sonhos, é simultaneamente o análogo simbólico da faculdade profética e das artes em geral,mediante as quais a vida vem a ser possível e digna de viver (...) Na mesma passagem, Schopenhauer nos descreve o terror que se apodera do ser humano quando subitamente fica desorientado com as formas de conhecimento do fenômeno, porque o princípio da razão suficiente, em alguma dessas manifestações, parece sofrer exceções. Se juntarmos esse terror o delicioso êxtase que vem do mais profundo do ser humano, da natureza mesma, quando há esse rompimento do principium individuatonis, vislumbramos a essência do dionisíaco, que nos é trasmitida mais diretamente pela analogia com a embriaguez.\".",
+        "ts": "2026-04-27T14:34:14.541Z"
+      }
+    ],
     "b1": "",
     "n2": "TesteNick123\nTeste Julia"
   },
   "comments": [],
   "customRefs": [],
-  "ts": "2026-04-26T16:06:30.532Z"
+  "ts": "2026-04-27T14:40:32.223Z"
 }
